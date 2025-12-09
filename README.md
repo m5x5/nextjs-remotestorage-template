@@ -9,7 +9,10 @@ A clean, production-ready Next.js template for building apps with RemoteStorage.
 - ✅ Custom RemoteStorage module pattern
 - ✅ React hooks for data synchronization
 - ✅ RemoteStorage widget for user authentication
-- ✅ Tailwind CSS for styling
+- ✅ Tailwind CSS with semantic color system
+- ✅ Full dark mode support with theme persistence
+- ✅ Comprehensive UI component library
+- ✅ Responsive sidebar navigation
 - ✅ TypeScript-ready structure
 - ✅ Clean, extensible architecture
 
@@ -33,11 +36,20 @@ Open [http://localhost:3000](http://localhost:3000) to see your app.
 
 ```
 ├── app/
-│   ├── layout.js           # Root layout with RemoteStorageProvider
-│   ├── page.js             # Example page showing RemoteStorage usage
-│   └── globals.css         # Global styles
+│   ├── layout.js           # Root layout with providers
+│   ├── page.js             # Main page with RemoteStorage demo
+│   └── globals.css         # Global styles & CSS variables
 ├── components/
-│   └── RemoteStorageWidget.js  # Connection widget UI
+│   ├── ui/                 # Reusable UI components
+│   │   ├── Button.js       # Button with variants
+│   │   ├── Card.js         # Card components
+│   │   ├── Input.js        # Input & Textarea
+│   │   ├── Badge.js        # Badge component
+│   │   ├── Modal.js        # Modal dialog
+│   │   └── index.js        # Component exports
+│   ├── Sidebar.js          # Navigation sidebar
+│   ├── ThemeProvider.js    # Theme context provider
+│   └── RemoteStorageWidget.js  # RemoteStorage widget
 ├── contexts/
 │   └── RemoteStorageContext.js # RemoteStorage React Context
 ├── hooks/
@@ -46,6 +58,8 @@ Open [http://localhost:3000](http://localhost:3000) to see your app.
 ├── lib/
 │   ├── remotestorage-module.js # Custom RemoteStorage module
 │   └── utils.js                # Utility functions
+├── DESIGN_SYSTEM.md        # UI design system documentation
+├── CLAUDE.md               # Guide for AI agents
 ├── package.json
 ├── tailwind.config.js
 ├── postcss.config.js
@@ -208,10 +222,41 @@ if (!remoteStorage?.mymodule || !isConnected) {
    - Offline usage
    - Conflict resolution
 
+## UI Components & Design System
+
+This template includes a comprehensive design system with reusable components. See [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) for full documentation.
+
+### Available Components
+
+- **Button**: 5 variants (primary, secondary, destructive, outline, ghost)
+- **Card**: Container with header, title, and content sections
+- **Input/Textarea**: Form inputs with labels and error states
+- **Badge**: Status indicators with multiple variants
+- **Modal**: Full-featured dialog with backdrop
+
+### Theme System
+
+The app supports light, dark, and system themes:
+- Theme preference is saved to RemoteStorage
+- Automatic sync across devices
+- Smooth transitions between themes
+- Semantic color tokens for consistency
+
+```javascript
+import { useTheme } from "next-themes"
+
+function MyComponent() {
+  const { theme, setTheme } = useTheme()
+  // Use theme state
+}
+```
+
 ## Dependencies
 
 - `remotestoragejs@^2.0.0-beta.8` - Core RemoteStorage protocol
 - `m5x5-remotestorage-widget@^1.8.0` - UI widget for connecting
+- `@heroicons/react@^2.x` - Icon library
+- `next-themes@^0.x` - Theme management
 - `next@^14.2.15` - Next.js framework
 - `react@^18.3.1` - React library
 - `tailwindcss@^3.4.14` - CSS framework
