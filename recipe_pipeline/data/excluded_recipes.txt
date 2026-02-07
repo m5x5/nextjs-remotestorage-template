@@ -1,0 +1,28 @@
+# Excluded Recipes
+# ==================
+# List recipe names to exclude from meal plan optimization (one per line)
+# Lines starting with # are comments and will be ignored
+# Recipe names must match exactly as they appear in recipe_database.csv
+#
+# Usage:
+#   1. Add recipe names below (one per line)
+#   2. Run: python optimization_meal_planner.py
+#   3. Listed recipes will not be selected for the meal plan
+#
+# Examples:
+# Ravioli Cinque Pi
+# Käsespätzle mit Röstzwiebeln
+# Maissuppe mit Wienerli und Bürli
+#
+# Reasons to exclude:
+#   - Already ate this recipe recently
+#   - Don't have ingredients available
+#   - Family doesn't like this recipe
+#   - Too much lactose/specific nutrient
+#   - Saving for a special occasion
+#
+# Add your exclusions below this line:
+# ───────────────────────────────────────────────────────────────────────
+
+Rosmarin-Parmesan-Waffeln
+Low Carb Tex-Mex-Auflauf

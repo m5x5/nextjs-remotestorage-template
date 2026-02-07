@@ -1,0 +1,68 @@
+ingredient_name,frequency,raw_examples,bls_rank,bls_entry_name,match_score,approve
+möhren,72,120 g Möhren,1,Karotte roh,1.0,Y
+paprika edelsüß,46,½ TL Paprika edelsüß,1,Paprikapulver (edelsüß),1.0,Y
+chilischote,35,"1 rote Chilischote, frisch",1,Paprika scharf (Chili) roh,1.0,Y
+karotten,33,150 g Karotten,1,Karotte roh,1.0,Y
+"erbsen, tk",31,"150 g Erbsen, TK",1,"Erbse grün, roh",0.64,
+curry,26,½ TL Curry,1,Lammcurry,0.914,Y
+kreuzkümmel (cumin),24,"1 TL Kreuzkümmel (Cumin), gemahlen",1,Fruchtgummi (Gummibonbon),0.5,
+brokkoliröschen,23,100 g Brokkoliröschen,1,Markklößchen,0.667,
+pinienkerne,22,30 g Pinienkerne,1,Pinienkern,0.952,Y
+risottoreis,22,320 g Risottoreis,1,Leberrisotto/Leberreis,0.667,
+spaghetti,22,350 g Spaghetti,1,Spargelrisotto,0.609,
+stängel koriander,20,3 Stängel Koriander,1,Ingwer kandiert,0.625,
+linguine,20,500 g Linguine,1,Pinienkern,0.556,
+dill,18,½ Bund Dill,1,Dill gefroren,1.0,Y
+lauch,17,50 g Lauch,1,Bärlauch roh,0.788,Y
+weisswein,15,"420 g Weisswein, trocken",1,Eiswein,0.875,Y
+süßkartoffeln,15,1000 g Süßkartoffeln,1,Kartoffelgratin,0.714,
+currypaste,15,30 g gelbe Currypaste,1,Currybratwurst,0.667,
+knollensellerie,14,50 g Knollensellerie,1,Knollensellerie roh,1.0,Y
+lachsfilet,14,"600 g Lachsfilet, frisch, ohne Haut",1,"Seelachsfilet paniert, gebraten",0.688,
+rosmarin,14,1 TL Rosmarin,1,Marzipan,0.625,
+speckwürfel,14,75 g Speckwürfel,1,Pumpernickel,0.522,
+kreuzkümmel,14,"¼ TL Kreuzkümmel, gemahlen",1,Reis Mehl,0.5,
+paprika rosenscharf,13,1 TL Paprika rosenscharf,1,Aprikosensaft,0.75,Y
+majoran,13,"1 EL Majoran, getrocknet",1,Marzipan,0.667,
+muskatnuss,13,"½ TL Muskatnuss, gemahlen",1,Pekannuss,0.632,
+hartkäse,13,250 g Hartkäse,1,Hartkäse mind. 45 % Fett i. Tr.,0.61,
+imette,12,½ Limette,1,Limette roh,0.906,Y
+fischsauce,12,20 g Fischsauce,1,Punschsauce,0.762,Y
+garnelen geschält,12,"400 g Garnelen, roh, geschält",1,"Apfel geschält, roh",0.667,
+worcester-sauce,11,1 TL Worcester-Sauce,1,Malteser Sauce,0.621,
+frischer ingwer,11,20 g frischer Ingwer,1,Eier-Frischteigwaren roh,0.615,
+elbe paprika,11,1 gelbe Paprika,1,Rührei gebraten mit Paprika,0.564,
+bandnudeln,11,400 g Bandnudeln,1,Mandelöl,0.556,
+stängel minze,11,5 Stängel Minze,1,Steinsalz,0.545,
+"mais, aus der dose",11,"140 g Mais, aus der Dose",1,Mais roh,0.538,
+orbeerblatt,10,"1 Lorbeerblatt, getrocknet",1,Erdbeersaft,0.636,
+pecorino,10,40 g Pecorino,1,Portwein,0.625,
+"blattspinat, tk",10,"80 g Blattspinat, TK",1,Spinat roh,0.56,
+eier (größe m),10,2 Eier (Größe M),1,Eier gekocht,0.538,
+paprika de la vera,10,½ TL Paprika de la Vera,1,"Gemüsepaprika gelb, roh",0.537,
+"emüsebouillonwürfel (für je 0,5 l)",10,"2 Gemüsebouillonwürfel (für je 0,5 l)",1,"Gemüse Bouillon/Brühe/Suppe (Brühwürfel, Pulver)",0.537,
+eisbergsalat,9,40 g Eisbergsalat,1,Eisbergsalat roh,1.0,Y
+mandeln,9,60 g Mandeln,1,Mandelöl,0.8,Y
+weizenmehl,9,50 g Weizenmehl,1,Buchweizen Mehl,0.8,Y
+fenchel,9,200 g Fenchel,1,Gemüsefenchel roh,0.783,Y
+räucherlachs,9,300 g Räucherlachs,1,Lachs geräuchert (Räucherlachs),0.758,Y
+walnusshälften,9,80 g Walnusshälften,1,Walnuss gemahlen,0.733,
+penne,9,250 g Penne,1,Pekannuss,0.571,
+minze,9,5 g Minze,1,Liegnitzer,0.533,
+kürbis,8,150 g Kürbis,1,Kürbiskern,0.95,Y
+haselnüsse,8,70 g Haselnüsse,1,Haselnuss,0.842,Y
+erdnusscreme,8,50 g Erdnusscreme,1,Erdnussbutter/Erdnusscreme,0.832,Y
+peperoni,8,140 g rote Peperoni,1,Kabanossi/Peperoni,0.815,Y
+couscous,8,100 g Couscous,1,Couscous mit Butter,0.793,Y
+"joghurt, 3,5% fett",8,"2 EL Joghurt, 3,5% Fett",1,"Joghurt mild, mind. 3,5 % Fett",0.75,Y
+"kartoffeln, festkochend",8,"400 g Kartoffeln, festkochend",1,Kartoffel-Gemüse-Kuchen,0.696,
+bärlauchblätter,8,"70 g Bärlauchblätter, frisch",1,Bärlauch roh,0.667,
+"paprika, gemischt",8,"200 g Paprika, gemischt",1,"Gemüsepaprika rot, gekocht",0.651,
+schmelzkäse,8,40 g Schmelzkäse,1,Pariser Käsecremesuppe (mit Schmelzkäse),0.631,
+kerbel,8,1 Bund Kerbel,1,Erbsenmehl,0.625,
+kresse-beet,8,½ Kresse-Beet,1,Preiselbeersaft,0.615,
+kurze nudeln,8,320 g kurze Nudeln,1,Reisnudeln roh,0.615,
+senfkörner,8,2 TL schwarze Senfkörner,1,Senfbutter,0.6,
+"tofu, fest",8,"300 g Tofu, fest",1,Kartoffelwurst,0.583,
+griechischer joghurt (10% fett),8,100 g Griechischer Joghurt (10% Fett),1,Griechischer Bauernsalat,0.582,
+eh. tl gemüsebouillon paste,8,1 geh. TL Gemüsebouillon Paste,1,Hecht gedünstet,0.524,

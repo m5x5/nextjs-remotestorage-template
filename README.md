@@ -276,6 +276,157 @@ function MyComponent() {
 5. **Timestamps**: Use ISO format for consistency across timezones
 6. **List Files**: Keep separate list files for quick metadata access
 
+## Recipe Nutrition Optimization System
+
+This project includes a Python-based recipe nutrition analysis and meal planning optimization system using the German BLS (Bundeslebensmittelschlüssel) database.
+
+### Quick Start
+
+```bash
+# 1. Initial setup: Scrape recipes and create database (one-time or when adding new recipes)
+python recipe_schema_extraction.py
+
+# 2. Improve ingredient mappings (iterative, until match rate is satisfactory)
+python recipe_unmatched_analysis.py          # Find unmatched ingredients
+python add_mapping.py "ingredient" "BLS_Entry" "Category"  # Add mappings
+python recipe_add_audit_trails.py            # Recalculate with new mappings
+
+# 3. Generate optimized meal plan (anytime)
+python optimization_meal_planner.py
+```
+
+### How It Works
+
+**Single Source of Truth:** All nutrient data (including lactose) is calculated from BLS database in one place (`recipe_schema_extraction.py`). No separate lactose calculation needed.
+
+**Workflow:**
+1. **Recipe Scraping** → Fetches recipes from Cookidoo, matches ingredients to BLS database
+2. **Ingredient Matching** → Maps recipe ingredients to BLS nutritional data (iteratively improve)
+3. **Optimization** → OR-Tools linear programming selects optimal weekly meal plan
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `recipe_schema_extraction.py` | Scrapes recipes, matches ingredients to BLS, calculates ALL nutrients (including lactose) |
+| `recipe_add_audit_trails.py` | Reprocesses existing recipes with updated ingredient mappings |
+| `optimization_meal_planner.py` | Generates optimal weekly meal plan using linear programming |
+| `ingredient_mappings.csv` | Central mapping file: recipe ingredients → BLS database entries |
+| `recipe_database.csv` | Main recipe database with audit trails and nutrients |
+
+### Ingredient Mapping Tools
+
+```bash
+# Find unmatched ingredients
+python recipe_unmatched_analysis.py
+
+# Validate a mapping before adding
+python validate_mapping.py "ingredient_name"
+
+# Add a single mapping
+python add_mapping.py "chorizo" "Chorizo roh" "Proteins & Meat"
+
+# Generate suggestions for top unmatched ingredients
+python batch_mapping_suggester.py
+
+# Bulk import approved mappings
+python bulk_import_approved_mappings.py
+```
+
+### Configuration
+
+Edit `optimization_config.py` to customize:
+- **HOUSEHOLD_SIZE**: Number of people (default: 2)
+- **MAX_LACTOSE_PER_MEAL**: Maximum lactose per meal in mg (default: 2000)
+- **WEEKLY_GOALS**: Target values for calories, protein, vitamins, etc.
+
+### Excluding Recipes
+
+To exclude specific recipes from the optimization (e.g., recently eaten, missing ingredients):
+
+1. List available recipes:
+   ```bash
+   python list_recipes.py                    # Show all recipes
+   python list_recipes.py --sort-lactose     # Sort by lactose content
+   python list_recipes.py --search "pasta"   # Search for specific recipes
+   python list_recipes.py --low-lactose 500  # Show only low-lactose recipes
+   ```
+
+2. Edit `excluded_recipes.txt` and add recipe names (one per line, exact match)
+
+3. Run optimization - excluded recipes will be skipped
+
+Example `excluded_recipes.txt`:
+```
+# Recipes to exclude this week
+Ravioli Cinque Pi
+Käsespätzle mit Röstzwiebeln
+Maissuppe mit Wienerli und Bürli
+```
+
+### Understanding the Data Flow
+
+```
+Cookidoo Recipe → Schema.org JSON
+                       ↓
+              Parse ingredients
+                       ↓
+         Match to BLS database (using ingredient_mappings.csv)
+                       ↓
+         Calculate ALL nutrients (calories, protein, lactose, etc.)
+                       ↓
+              Store in recipe_database.csv
+                       ↓
+         Optimization reads and selects optimal recipes
+```
+
+**Important:** Lactose is calculated automatically from BLS data along with all other nutrients. No separate calculation step needed.
+
+### Common Tasks
+
+**Add new recipes:**
+```bash
+# Add URLs to Lebensmittel - Cookidoo Export - Rezepte.csv
+python recipe_schema_extraction.py
+```
+
+**Improve match rate:**
+```bash
+# Check current match rate
+python recipe_unmatched_analysis.py
+
+# Add missing mappings
+python add_mapping.py "ingredient" "BLS_Entry" "Category"
+
+# Recalculate with new mappings
+python recipe_add_audit_trails.py
+
+# Current match rate should improve
+python recipe_unmatched_analysis.py
+```
+
+**Generate meal plan with different goals:**
+```bash
+# Edit optimization_config.py (change WEEKLY_GOALS)
+python optimization_meal_planner.py
+```
+
+### Output Files
+
+- `optimization_meal_plan.csv` - Selected recipes with nutritional breakdown
+- `optimization_report.txt` - Detailed report with:
+  - Lactose contributors per recipe
+  - Lactose-free ingredients
+  - Unmatched ingredients (potential missing data)
+  - Weekly nutritional summary
+
+### Notes
+
+- **Match rate target:** Aim for >80% for accurate nutritional calculations
+- **Lactose data:** Automatically included from BLS database (no separate calculation)
+- **Unmatched ingredients:** Not included in nutritional totals (improve mappings to fix)
+- **All nutrients:** Calculated once during recipe scraping from BLS database
+
 ## License
 
 MIT - Use this template for any project!

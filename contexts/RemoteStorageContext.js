@@ -5,6 +5,7 @@ import { useRemoteStorage } from "../hooks/use-remote-storage"
 import { useData } from "../hooks/use-data"
 import { MyModule } from "../lib/remotestorage-module"
 import RemoteStorageWidget from "../components/RemoteStorageWidget"
+import { useNavigation } from "./NavigationContext"
 
 const RemoteStorageContext = createContext(null)
 
@@ -13,6 +14,9 @@ const RemoteStorageContext = createContext(null)
  * Wraps your app to provide RemoteStorage functionality
  */
 export function RemoteStorageProvider({ children }) {
+  // Get active tab from navigation context
+  const { activeTab } = useNavigation()
+
   // Initialize RemoteStorage with your module
   const remoteStorage = useRemoteStorage({
     modules: [MyModule],
@@ -34,14 +38,22 @@ export function RemoteStorageProvider({ children }) {
     isLoading: data.isLoading,
 
     // Data and methods from useData hook
-    ...data
+    ...data,
+
+    // Cleanup function
+    cleanupDuplicates: async () => {
+      if (remoteStorage?.mymodule) {
+        return await remoteStorage.mymodule.cleanupDuplicatesByTitle()
+      }
+      return { removed: 0, kept: 0 }
+    }
   }), [remoteStorage, data])
 
   return (
     <RemoteStorageContext.Provider value={value}>
       {children}
-      {/* Widget for connecting to RemoteStorage */}
-      {remoteStorage && <RemoteStorageWidget remoteStorage={remoteStorage} />}
+      {/* Widget for connecting to RemoteStorage - only show on settings page */}
+      {remoteStorage && activeTab === "settings" && <RemoteStorageWidget remoteStorage={remoteStorage} />}
     </RemoteStorageContext.Provider>
   )
 }

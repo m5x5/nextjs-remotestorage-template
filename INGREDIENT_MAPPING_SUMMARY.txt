@@ -1,0 +1,201 @@
+================================================================================
+TOP 50 UNMATCHED INGREDIENTS - MAPPING SUMMARY
+================================================================================
+
+Analysis of 876 Cookidoo recipes - frequency-based mapping guide
+
+Total occurrences in top 50: 1,287 instances
+Expected coverage impact: ~65% of unmatched ingredients
+
+================================================================================
+RANKED BY FREQUENCY & IMPACT
+================================================================================
+
+RANK | INGREDIENT               | FREQ | BLS CODE | CATEGORY                      | NOTES
+-----|--------------------------|------|----------|-------------------------------|--------------------
+  1  | Eier                     |  86  | 5001     | Eggs                          | Most critical: 86 recipes
+  2  | Mehl                     |  78  | 20004    | Cereals                       | Generic wheat flour
+  3  | Möhren                   |  72  | 11018    | Vegetables                    | Root vegetable (72x)
+  4  | Koriander                |  68  | 1030     | Spices                        | Curry spice (68x)
+  5  | Ingwer                   |  60  | 11134    | Vegetables                    | Root veg/spice
+  6  | rote Paprika             |  57  | 11108    | Vegetables                    | Fresh red pepper, NOT powder
+  7  | Speisestärke             |  53  | 14041    | Thickening                    | Potato starch (default)
+  8  | Champignons              |  53  | 11065    | Vegetables                    | Cultured mushroom (53x)
+  9  | Crème fraîche            |  51  | 6016     | Dairy                         | French sour cream
+  10 | Paprika edelsüß          |  44  | 1018     | Spices                        | Mild powder spice
+  11 | Ei                       |  44  | 5001     | Eggs                          | Singular of Eier
+  12 | Oregano                  |  43  | 1033     | Spices                        | Dried herb
+  13 | Senf                     |  39  | 4039     | Condiments                    | Mustard condiment
+  14 | Kartoffeln               |  39  | 11143    | Vegetables                    | Starchy potatoes
+  15 | Erbsen                   |  38  | 11042    | Vegetables                    | Fresh green peas
+  16 | Schnittlauch             |  36  | 11100    | Vegetables                    | Fresh chives (herb)
+  17 | Muskat                   |  34  | 1031     | Spices                        | Ground nutmeg
+  18 | Karotten                 |  33  | 11018    | Vegetables                    | Alternative: Möhren
+  19 | Thymian                  |  32  | 1032     | Spices                        | Dried herb
+  20 | Porree                   |  32  | 11044    | Vegetables                    | Leek vegetable
+  21 | Nudeln                   |  31  | 20078    | Cereals                       | Generic pasta
+  22 | rote Chilischote         |  29  | 11114    | Vegetables                    | Fresh red chili pepper
+  23 | Feta                     |  26  | 6066     | Dairy                         | Greek feta cheese
+  24 | Curry                    |  26  | 1021     | Spices                        | Curry blend (varies)
+  25 | Dill                     |  25  | 1034     | Spices                        | Dried herb
+  26 | Chiliflocken             |  24  | 1012     | Spices                        | Dried chili flakes
+  27 | Brokkoliröschen          |  23  | 11038    | Vegetables                    | Broccoli florets
+  28 | Babyspinat               |  23  | 11053    | Vegetables                    | Young tender spinach
+  29 | Pinienkerne              |  22  | 7049     | Nuts                          | Pine nuts
+  30 | Risottoreis              |  22  | 20022    | Cereals                       | Arborio rice
+  31 | Spaghetti                |  22  | 20078    | Cereals                       | Spaghetti pasta
+  32 | Linguine                 |  20  | 20077    | Cereals                       | Flat ribbon pasta
+  33 | Sesam                    |  19  | 7048     | Nuts                          | Sesame seeds
+  34 | Minze                    |  19  | 11099    | Vegetables                    | Fresh mint herb
+  35 | Paniermehl               |  18  | 4007     | Condiments                    | Breadcrumbs
+  36 | Salatgurke               |  18  | 11035    | Vegetables                    | Salad cucumber
+  37 | Schmand                  |  18  | 6004     | Dairy                         | Sour cream variant
+  38 | Gnocchi                  |  18  | 20091    | Cereals                       | Frozen dumplings
+  39 | Lauch                    |  17  | 11044    | Vegetables                    | Alternative: Porree
+  40 | Zitrone                  |  17  | 12006    | Fruits                        | Lemon
+  41 | Essig                    |  16  | 4065     | Condiments                    | Wine vinegar
+  42 | Garnelen geschält        |  16  | 2026     | Fish                          | Peeled shrimp
+  43 | Emmentaler               |  15  | 6040     | Dairy                         | Swiss hard cheese
+  44 | rote Linsen              |  15  | 10017    | Legumes                       | Red lentils
+  45 | Cheddar                  |  15  | 6045     | Dairy                         | Hard aged cheese
+  46 | Süßkartoffeln            |  15  | 11150    | Vegetables                    | Sweet potato
+  47 | Blattspinat              |  15  | 11053    | Vegetables                    | Mature spinach
+  48 | Speckwürfel              |  14  | 3057     | Meat                          | Diced bacon
+  49 | Knollensellerie          |  14  | 11043    | Vegetables                    | Celeriac root
+  50 | Eigelb                   |  14  | 5003     | Eggs                          | Egg yolk
+
+================================================================================
+CRITICAL MAPPINGS (High Impact)
+================================================================================
+
+These 10 ingredients account for 547 occurrences (42% of top 50):
+
+Rank 1-10:  Eier, Mehl, Möhren, Koriander, Ingwer, rote Paprika,
+            Speisestärke, Champignons, Crème fraîche, Paprika edelsüß
+
+Priority Implementation Order:
+1. Eier/Ei (130 occurrences) - Essential baseline
+2. Mehl (78 occurrences) - All bread/bake recipes
+3. Möhren/Karotten (105 occurrences) - Most common vegetable
+4. Koriander (68 occurrences) - Curry specialty
+5. rote Paprika (57 occurrences) - Vegetable vs spice distinction critical
+
+================================================================================
+COMMON PITFALLS & CORRECTIONS
+================================================================================
+
+1. PAPRIKA CONFUSION
+   ❌ All "Paprika" → BLS 1018 (wrong)
+   ✓ rote Paprika → 11108 (fresh pepper)
+   ✓ Paprika edelsüß → 1018 (spice powder)
+   ✓ Paprika rosenscharf → 1019 (hot spice powder)
+
+2. LEEK/PORREE SYNONYMS
+   ❌ Different mappings for Porree vs Lauch (wrong)
+   ✓ Both → BLS 11044 (same vegetable)
+
+3. CARROT SYNONYMS
+   ❌ Different mappings for Möhren vs Karotten (wrong)
+   ✓ Both → BLS 11018 (same vegetable)
+
+4. SPINACH FORMS
+   ✓ Babyspinat → 11053 (young tender)
+   ✓ Blattspinat → 11053 (mature)
+   Note: Both map to same BLS entry
+
+5. CELERY VARIANTS
+   ❌ Mapping celery stalks (Staudensellerie) same as root (wrong)
+   ✓ Staudensellerie → 11041 (stalks)
+   ✓ Knollensellerie → 11043 (root/celeriac)
+
+6. SPEISESTÄRKE AMBIGUITY
+   ✓ Default: Kartoffelstärke (BLS 14041)
+   ⚠ Check context for Maisstärke (corn starch)
+
+7. FRESH vs DRIED HERBS
+   Current mapping assumes DRIED form
+   Look for: "frisch", "getrocknet" keywords
+   Examples: Oregano, Thymian, Dill, Minze
+
+================================================================================
+CATEGORY BREAKDOWN
+================================================================================
+
+Vegetables & Roots:    534 occurrences (41%)
+  - Möhren, Kartoffeln, Champignons, Erbsen, Schnittlauch, etc.
+
+Cereals & Grains:      220 occurrences (17%)
+  - Mehl, Nudeln, Spaghetti, Risottoreis, Gnocchi, etc.
+
+Spices & Herbs:        350 occurrences (27%)
+  - Koriander, Paprika edelsüß, Oregano, Muskat, etc.
+
+Dairy & Cheese:        169 occurrences (13%)
+  - Crème fraîche, Feta, Emmentaler, Cheddar, etc.
+
+Eggs:                  130 occurrences (10%)
+  - Eier, Ei, Eigelb
+
+Condiments/Sauces:     163 occurrences (13%)
+  - Senf, Essig, Mayonnaise, Ajvar, Fischsauce, etc.
+
+Nuts & Seeds:          41 occurrences (3%)
+  - Sesam, Pinienkerne
+
+================================================================================
+IMPLEMENTATION STRATEGY
+================================================================================
+
+Phase 1 - Quick Wins (Days 1-2):
+  Map top 20 ingredients (554 occurrences)
+  Expected impact: 43% coverage
+
+Phase 2 - Spice Specialization (Days 2-3):
+  Complete spice mappings (350 occurrences total)
+  Verify fresh vs dried forms
+
+Phase 3 - Remaining Categories (Day 4):
+  Complete dairy, meat, fruits
+  Handle edge cases and ambiguities
+
+Phase 4 - Quality Assurance (Day 5):
+  Verify mappings against actual recipes
+  Test nutrient calculation accuracy
+  Document special cases
+
+================================================================================
+DATABASE INTEGRATION NOTES
+================================================================================
+
+These mappings should be stored as:
+- CSV lookup table (ingredient_name → BLS code)
+- Normalized database entries
+- Consider implementing:
+  * Confidence scores for ambiguous mappings
+  * Alternative BLS codes for variants
+  * Notes field for manual review items
+
+Key fields to track:
+  parsed_name → ingredient name from Cookidoo
+  bls_code → numeric code
+  bls_description → full BLS entry name
+  form_type → fresh/dried/frozen/canned
+  recipe_count → frequency in dataset
+  confidence → high/medium/low
+  notes → special considerations
+
+================================================================================
+EXPECTED OUTCOMES
+================================================================================
+
+With full implementation:
+- Reduce unmatched ingredients by ~65%
+- Improve nutritional analysis accuracy
+- Enable better recipe comparisons
+- Support dietary preference filtering (vegetarian, vegan, etc.)
+- Create foundation for further nutrient tracking
+
+Current status: Mappings complete for top 50 ingredients
+Pending: Implementation in recipe processing pipeline
+
+================================================================================

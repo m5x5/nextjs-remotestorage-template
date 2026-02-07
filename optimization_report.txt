@@ -1,0 +1,176 @@
+MEAL PLAN OPTIMIZATION REPORT
+======================================================================
+
+Household Size: 2
+Meals per Day: 2
+Total Recipes Selected: 7
+Total Rating (week): -248.0
+Average Rating: -35.43
+Total Lactose (week): 90.1 mg
+Average Lactose per Day: 12.9 mg
+
+WEEKLY MEAL PLAN (One recipe per day):
+----------------------------------------------------------------------
+  Monday: Chopped Cheeseburger
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r926837
+    Rating: -3.0
+    Lactose: 74mg
+    Nutrients (per meal for 2 people):
+      Calories: 769 kcal
+      Protein: 58.3g
+      Fat: 57.8g
+      Carbs: 3.0g
+      Fiber: 0.7g
+      Vitamin A: 187µg
+      Vitamin C: 4mg
+      Vitamin B12: 9.06µg
+      Iron: 4.3mg
+      Calcium: 300mg
+      Magnesium: 59mg
+    Lactose contributors:
+      • 100 g Cheddar: 147.2mg
+    Lactose-free ingredients: 12
+    Unmatched ingredients (4):
+      • 2 EL Barbecue-Sauce
+      • 3 - 4 Tropfen Tabasco
+      • 1 geh. TL Senf
+      • 4 Burgerbrötchen
+
+  Tuesday: Paprika-Zucchini-Pasta
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r216655
+    Rating: -644.0
+    Lactose: 14mg
+    Nutrients (per meal for 2 people):
+      Calories: 1167 kcal
+      Protein: 79.6g
+      Fat: 63.2g
+      Carbs: 55.9g
+      Fiber: 20.1g
+      Vitamin A: 711µg
+      Vitamin C: 274mg
+      Vitamin B12: 10.40µg
+      Iron: 17.6mg
+      Calcium: 576mg
+      Magnesium: 248mg
+    Lactose contributors:
+      • 50 g Parmesan: 28.0mg
+    Lactose-free ingredients: 13
+    Unmatched ingredients (1):
+      • 1 getrocknetes Lorbeerblatt
+
+  Wednesday: Tortilla-Calzone
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r753852
+    Rating: -403.0
+    Lactose: 0mg
+    Nutrients (per meal for 2 people):
+      Calories: 991 kcal
+      Protein: 37.5g
+      Fat: 10.3g
+      Carbs: 159.9g
+      Fiber: 39.6g
+      Vitamin A: 1128µg
+      Vitamin C: 544mg
+      Vitamin B12: 0.00µg
+      Iron: 26.5mg
+      Calcium: 501mg
+      Magnesium: 374mg
+    Lactose-free ingredients: 11
+    Unmatched ingredients (1):
+      •  Pizzagewürz
+
+  Thursday: Kidneybohnen-Curry
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r149483
+    Rating: 1000.0
+    Lactose: 2mg
+    Nutrients (per meal for 2 people):
+      Calories: 1288 kcal
+      Protein: 92.2g
+      Fat: 3.4g
+      Carbs: 165.0g
+      Fiber: 101.3g
+      Vitamin A: 23µg
+      Vitamin C: 31mg
+      Vitamin B12: 0.00µg
+      Iron: 25.3mg
+      Calcium: 442mg
+      Magnesium: 690mg
+    Lactose contributors:
+      • 1 geh. TL Curry: 5.0mg
+    Lactose-free ingredients: 12
+    Unmatched ingredients (1):
+      • 20 g Ghee
+
+  Friday: Maharagwe (Bohnen in Kokossauce)
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r925082
+    Rating: -7.0
+    Lactose: 0mg
+    Nutrients (per meal for 2 people):
+      Calories: 1990 kcal
+      Protein: 109.1g
+      Fat: 57.6g
+      Carbs: 189.3g
+      Fiber: 124.0g
+      Vitamin A: 6µg
+      Vitamin C: 28mg
+      Vitamin B12: 0.00µg
+      Iron: 28.8mg
+      Calcium: 513mg
+      Magnesium: 818mg
+    Lactose-free ingredients: 12
+    Unmatched ingredients (1):
+      • ½ TL Zimt, gemahlen
+
+  Saturday: Karfiol-Bohnen-Salat schnell auf den Tisch
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r144631
+    Rating: -75.0
+    Lactose: 0mg
+    Nutrients (per meal for 2 people):
+      Calories: 838 kcal
+      Protein: 50.5g
+      Fat: 17.2g
+      Carbs: 91.6g
+      Fiber: 55.6g
+      Vitamin A: 12µg
+      Vitamin C: 137mg
+      Vitamin B12: 0.00µg
+      Iron: 13.1mg
+      Calcium: 262mg
+      Magnesium: 368mg
+    Lactose-free ingredients: 8
+    Unmatched ingredients (2):
+      • 6 EL gemischte, frische Kräuter
+      • 2 - 3 TL Kapern, eingelegt
+
+  Sunday: Nacksche Mäuse - Weiße-Bohnen-Eintopf
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r796301
+    Rating: -116.0
+    Lactose: 0mg
+    Nutrients (per meal for 2 people):
+      Calories: 1359 kcal
+      Protein: 92.2g
+      Fat: 10.9g
+      Carbs: 165.8g
+      Fiber: 101.2g
+      Vitamin A: 4µg
+      Vitamin C: 24mg
+      Vitamin B12: 0.00µg
+      Iron: 25.1mg
+      Calcium: 445mg
+      Magnesium: 688mg
+    Lactose-free ingredients: 7
+
+
+======================================================================
+NUTRITIONAL SUMMARY:
+----------------------------------------------------------------------
+ENERCC_kcal: 6561.6/14000.0 (46.9%)
+PROT_g: 350.2/385.0 (91.0%)
+FAT_g: 465.0/490.0 (94.9%)
+CHO_g: 581.8/1750.0 (33.2%)
+FIBT_g: 442.5/210.0 (210.7%)
+VITA_ug: 2071.6/4900.0 (42.3%)
+VITC_mg: 1041.1/525.0 (198.3%)
+VITB12_ug: 19.5/16.8 (115.8%)
+FE_mg: 140.7/56.0 (251.3%)
+CA_mg: 3037.8/7000.0 (43.4%)
+MG_mg: 3245.4/2800.0 (115.9%)

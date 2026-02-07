@@ -1,0 +1,221 @@
+================================================================================
+                    REZEPT-ANALYSE PIPELINE - QUICKSTART
+================================================================================
+
+📦 DATEIEN ERSTELLT:
+
+Haupt-Scripts (mit recipe_ Präfix):
+  ✓ recipe_schema_extraction.py    - Extrahiert Rezeptdaten von Cookidoo-URLs
+  ✓ recipe_weekly_analyzer.py      - Analysiert gegen wöchentliche Diät-Ziele
+  ✓ recipe_process_all.py          - Orchestriert beide Scripts
+  ✓ recipe_config.py               - Konfiguration (BEARBEITEN!)
+
+Dokumentation:
+  ✓ recipe_README.md               - Überblick & Schnellstart
+  ✓ recipe_GUIDE.md                - Detailliertes Handbuch
+  ✓ recipe_SUMMARY.md              - Ausführlicher Überblick
+  ✓ recipe_QUICKSTART.txt          - Diese Datei
+
+================================================================================
+⚡ SCHNELLSTART (60 Sekunden)
+================================================================================
+
+1. INSTALLIERE ABHÄNGIGKEITEN:
+   $ pip install pandas requests beautifulsoup4 openpyxl
+
+2. KONFIGURIERE DEINE ZIELE (WICHTIG!):
+   - Öffne recipe_config.py
+   - Bearbeite DAILY_GOALS mit deinen Zielen
+   - Speichere ab
+
+3. FÜHRE PIPELINE AUS:
+   $ python recipe_process_all.py
+
+4. ERGEBNIS VERWENDEN:
+   - Öffne recipe_final.csv in Excel
+   - Analysiere deine Rezepte!
+
+================================================================================
+📊 WAS PASSIERT?
+================================================================================
+
+Input:
+  Lebensmittel - Cookidoo Export - Rezepte.csv
+  BLS_4_0_Daten_2025_DE.csv
+
+Prozess:
+  1. recipe_schema_extraction.py (2-5 Min)
+     → Ruft Cookidoo-Links auf
+     → Extrahiert Rezeptdaten
+     → Berechnet Nährstoffe
+     → Speichert: recipe_database.csv
+
+  2. recipe_weekly_analyzer.py (< 1 Sek)
+     → Vergleicht gegen deine Ziele
+     → Berechnet Abdeckung
+     → Erstellt Statistiken
+     → Speichert: recipe_final.csv
+
+Output:
+  recipe_final.csv = DEINE ERGEBNISSE
+
+================================================================================
+🎯 KONFIGURATION ANPASSEN
+================================================================================
+
+Datei: recipe_config.py
+
+ÄNDERUNG 1: Deine Diät-Ziele
+  DAILY_GOALS = {
+      'calories': 2000,    ← Ändere hier dein Kalorienziel
+      'protein': 55,       ← Ändere hier dein Proteinziel
+      # ... weitere Nährstoffe
+  }
+
+ÄNDERUNG 2: Zutaten hinzufügen
+  INGREDIENT_MAP = {
+      'deine_zutat': 'BLS_Lebensmittelname',
+      # z.B. 'spargel': 'Spargel roh'
+  }
+
+ÄNDERUNG 3: Netzwerk-Probleme beheben
+  RATE_LIMIT_DELAY = 2.0      # Erhöhe von 0.5
+  REQUEST_TIMEOUT = 20        # Erhöhe von 10
+
+Nach Änderungen:
+  $ python recipe_weekly_analyzer.py  # (um Ziele zu testen)
+  $ python recipe_schema_extraction.py # (um Netzwerk zu testen)
+
+================================================================================
+📈 ERGEBNISSE VERSTEHEN
+================================================================================
+
+Spalte: weekly_coverage_PROTEIN_%
+  Bedeutung: % des Wochenziel-Proteins
+  100% = 1 Rezept erfüllt das komplette Wochenziel
+   50% = 2 Rezepte = 1 Wochenziel
+   10% = 10 Rezepte = 1 Wochenziel
+
+Spalte: daily_equiv_%
+  Bedeutung: % des Tagesziels
+  100% = Dieses Rezept = ein kompletter Tag
+   50% = 2 Rezepte = ein kompletter Tag
+
+Spalte: avg_weekly_coverage_%
+  Bedeutung: Durchschnittliche Abdeckung aller Nährstoffe
+  Nutze zum Sortieren: beste & schlechteste Rezepte
+
+================================================================================
+💡 PRAKTISCHE ANWENDUNGEN
+================================================================================
+
+ANWENDUNG 1: Top-Rezepte finden
+  Excel Filter: avg_weekly_coverage_% >= 50
+  Ergebnis: Beste Rezepte für deine Ziele
+
+ANWENDUNG 2: Schnelle & gesunde Rezepte
+  Excel Filter: time = "15 Min" oder "20 Min"
+  Sortiere: Nach avg_weekly_coverage_% (absteigend)
+  Ergebnis: Top schnelle Rezepte
+
+ANWENDUNG 3: Protein-fokussiert
+  1. recipe_config.py: 'protein': 150 (statt 55)
+  2. Führe aus: python recipe_weekly_analyzer.py
+  3. Filtere: weekly_coverage_PROT_g_% >= 25
+  Ergebnis: Hochprotein-Rezepte
+
+ANWENDUNG 4: Wochenplan erstellen
+  1. Sortiere: Nach avg_weekly_coverage_% (absteigend)
+  2. Nimm: Rezepte von Platz 1-7
+  3. Prüfe: Nährstofflücken
+  4. Ergänze: Mit einfachen Snacks/Zusätzen
+  Ergebnis: Ausgewogener Wochenplan
+
+================================================================================
+🚨 HÄUFIGE PROBLEME
+================================================================================
+
+Problem: "FileNotFoundError: Lebensmittel - Cookidoo Export"
+Lösung:  Stelle sicher, dass die CSV im gleichen Verzeichnis ist
+
+Problem: "Keine Recipe-Daten gefunden" (für einige Rezepte)
+Lösung:  NORMAL! ~20-30% der Rezepte haben keine Schema.org Daten
+
+Problem: "Netzwerkfehler" oder "Connection timeout"
+Lösung:  Erhöhe REQUEST_TIMEOUT in recipe_config.py auf 20 oder 30
+
+Problem: "Blockiert von Cookidoo" oder keine Antwort
+Lösung:  Erhöhe RATE_LIMIT_DELAY in recipe_config.py auf 1.0 oder 2.0
+
+Problem: Zutaten werden nicht erkannt (Nährstoffe = 0)
+Lösung:  Füge sie zu INGREDIENT_MAP in recipe_config.py hinzu
+
+================================================================================
+🎓 ERSTE SCHRITTE (ausführlich)
+================================================================================
+
+1. INSTALLIERE PYTHON-PACKAGES:
+   Windows:     py -m pip install pandas requests beautifulsoup4 openpyxl
+   Mac/Linux:   pip3 install pandas requests beautifulsoup4 openpyxl
+
+2. BEARBEITE DEINE ZIELE:
+   - Öffne: recipe_config.py (mit Editor: VSCode, Sublime, etc.)
+   - Finde: DAILY_GOALS = {
+   - Ändere: calories, protein, fat, carbs, etc.
+   - Speichere: Ctrl+S (oder Cmd+S auf Mac)
+
+3. STARTE DIE PIPELINE:
+   Windows:     python recipe_process_all.py
+   Mac/Linux:   python3 recipe_process_all.py
+
+4. WARTE AUF ERGEBNISSE:
+   - Extraction:  2-5 Minuten (abhängig von Netzwerk)
+   - Analysis:    < 1 Sekunde
+   - Total:       2-5 Minuten
+
+5. ÖFFNE ERGEBNISSE:
+   - Öffne: recipe_final.csv
+   - Mit:   Excel, Google Sheets, LibreOffice, etc.
+
+6. ANALYSIERE:
+   - Sortiere nach: avg_weekly_coverage_% (absteigend)
+   - Filter nach:   weekly_coverage_PROTEIN_% >= 20
+   - Erstelle:      Wochenplan
+   - Vergleiche:    Deine Ziele
+
+================================================================================
+📚 MEHR INFORMATIONEN
+================================================================================
+
+Ausführlich:     Lese recipe_README.md
+Detailliert:     Lese recipe_GUIDE.md
+Überblick:       Lese recipe_SUMMARY.md
+Konfigurieren:   Bearbeite recipe_config.py
+
+================================================================================
+✅ CHECKLISTE
+================================================================================
+
+[ ] Python 3.7+ installiert
+[ ] Abhängigkeiten installiert
+[ ] Input-Dateien vorhanden
+[ ] recipe_config.py angepasst
+[ ] recipe_process_all.py ausgeführt
+[ ] recipe_final.csv geöffnet
+[ ] Rezepte analysiert
+
+================================================================================
+🚀 LOS GEHT'S!
+================================================================================
+
+Nächster Schritt:
+
+  1. Öffne recipe_config.py in deinem Editor
+  2. Bearbeite deine DAILY_GOALS
+  3. Speichere ab
+  4. Führe aus: python recipe_process_all.py
+  5. Freue dich auf recipe_final.csv!
+
+Viel Spaß! 🍽️📊
+
+================================================================================

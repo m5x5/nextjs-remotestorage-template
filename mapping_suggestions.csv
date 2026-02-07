@@ -1,0 +1,104 @@
+﻿unmatched_ingredient,frequency,example,bls_candidate_1,bls_candidate_2,bls_candidate_3
+eier,86,2 Eier,Eierteigwaren roh,,
+eier,86,2 Eier,,Eierteigwaren Tortellini (Fleischfüllung) getrocknet,
+eier,86,2 Eier,,,Eierteigwaren Tortelloni (Ricotta-Spinat-Füllung) getrocknet
+mehl,78,10 g Mehl,Gerste Mehl,,
+mehl,78,10 g Mehl,,Mais Mehl,
+mehl,78,10 g Mehl,,,Hafer Mehl
+möhren,72,120 g Möhren,Möhren-Nuss-Kuchen (Rührmasse),,
+möhren,72,120 g Möhren,,"Karotten/Möhren, gedünstet (mit Fett und Salz)",
+möhren,72,120 g Möhren,,,"Karotten/Möhren, gekocht"
+koriander,68,½ Bund Koriander,Rote-Linsensuppe mit Koriander,,
+ingwer,60,"10 g Ingwer, frisch","Ingwer/Ingwerwurzel, roh",,
+ingwer,60,"10 g Ingwer, frisch",,Ingwer kandiert,
+ingwer,60,"10 g Ingwer, frisch",,,Sushi Ingwer (Gari) Konserve
+rote paprika,57,200 g rote Paprika,"Rote Rübe/Rote Bete, roh",,
+rote paprika,57,200 g rote Paprika,,Vegetarische Bratwurst (aus Tofu und Weizenprotein),
+rote paprika,57,200 g rote Paprika,,,Sojaproteinisolat
+champignons,53,"250 g Champignons, frisch",Champignons im Backteig (mit Bier) frittiert,,
+champignons,53,"250 g Champignons, frisch",,"Hähnchen-Frikadellen mit Champignons, gebraten",
+champignons,53,"250 g Champignons, frisch",,,Grünkernrisotto mit Champignons
+paprika edelsüß,44,½ TL Paprika edelsüß,"Gemüsepaprika grün, roh",,
+paprika edelsüß,44,½ TL Paprika edelsüß,,"Gemüsepaprika rot, roh",
+paprika edelsüß,44,½ TL Paprika edelsüß,,,"Gemüsepaprika gelb, roh"
+ei,44,1 Ei,"Reis poliert, roh",,
+ei,44,1 Ei,,"Reis parboiled, poliert, roh",
+ei,44,1 Ei,,,"Teigwaren eifrei, roh"
+senf,39,1 TL Senf,Senf mittelscharf,,
+senf,39,1 TL Senf,,Senf extra scharf,
+senf,39,1 TL Senf,,,Senf scharf
+kartoffeln,39,600 g Kartoffeln,Kartoffelkloß (aus rohen Kartoffeln) Trockenprodukt,,
+kartoffeln,39,600 g Kartoffeln,,Kartoffelkloß (aus gekochten Kartoffeln) Trockenprodukt,
+kartoffeln,39,600 g Kartoffeln,,,Süßkartoffeln gedünstet (mit Fett und Salz)
+erbsen,38,"150 g Erbsen, TK",Erbsenmehl,,
+erbsen,38,"150 g Erbsen, TK",,Kichererbsenmehl,
+erbsen,38,"150 g Erbsen, TK",,,Erbsenpüree von grünen Erbsen
+schnittlauch,36,1 Bund Schnittlauch,Schnittlauch roh,,
+schnittlauch,36,1 Bund Schnittlauch,,Schnittlauch getrocknet,
+schnittlauch,36,1 Bund Schnittlauch,,,Schnittlauchquark (aus Sahnequark)
+"kreuzkümmel, gemahlen",33,"1 TL Kreuzkümmel (Cumin), gemahlen",Haselnuss gemahlen,,
+"kreuzkümmel, gemahlen",33,"1 TL Kreuzkümmel (Cumin), gemahlen",,"Mandel süß, gemahlen",
+"kreuzkümmel, gemahlen",33,"1 TL Kreuzkümmel (Cumin), gemahlen",,,Walnuss gemahlen
+karotten,33,150 g Karotten,Weißkraut-Karotten-Eintopf mit weißen Bohnen und Hammelfleisch,,
+karotten,33,150 g Karotten,,"Karotten/Möhren, gedünstet (mit Fett und Salz)",
+karotten,33,150 g Karotten,,,"Gemüsemischung Erbsen-Karotten, roh"
+thymian,32,"1 TL Thymian, getrocknet",Ofenkäse mit Knoblauch und Thymian gebacken,,
+porree,32,250 g Porree,"Porree/Lauch, roh",,
+porree,32,250 g Porree,,"Porree/Lauch, geschmort ohne Fett",
+porree,32,250 g Porree,,,"Lauch/Porree, gedünstet (mit Fett und Salz)"
+nudeln,31,160 g Nudeln,"Glasnudeln aus Mungbohnenstärke, roh",,
+nudeln,31,160 g Nudeln,,Reisnudeln roh,
+nudeln,31,160 g Nudeln,,,Schneckennudeln/Rosenkuchen (Hefeteig)
+rote chilischote,29,"1 rote Chilischote, frisch","Rote Rübe/Rote Bete, roh",,
+rote chilischote,29,"1 rote Chilischote, frisch",,Vegetarische Bratwurst (aus Tofu und Weizenprotein),
+rote chilischote,29,"1 rote Chilischote, frisch",,,Sojaproteinisolat
+"kurkuma, gemahlen",28,"1 TL Kurkuma, gemahlen",Haselnuss gemahlen,,
+"kurkuma, gemahlen",28,"1 TL Kurkuma, gemahlen",,"Mandel süß, gemahlen",
+"kurkuma, gemahlen",28,"1 TL Kurkuma, gemahlen",,,Walnuss gemahlen
+feta,26,400 g Feta,Feta mind. 45 % Fett i. Tr.,,
+feta,26,400 g Feta,,Schafskäse (Feta) mit Tomaten und Oliven gebacken,
+curry,26,½ TL Curry,Curry-Gewürzketchup,,
+curry,26,½ TL Curry,,Currybratwurst,
+curry,26,½ TL Curry,,,Lammcurry
+dill,25,½ Bund Dill,"Salzgurke/Salzdillgurke, milchsauer fermentiert, abgetropft",,
+dill,25,½ Bund Dill,,Lachs-Dillcreme (mit Frischkäse),
+dill,25,½ Bund Dill,,,"Heringsfilet in Dillcreme, Konserve"
+pinienkerne,22,30 g Pinienkerne,"Blätterteigtaschen gefüllt mit Spinat, Schafskäse und Pinienkernen, gebacken",,
+spaghetti,22,350 g Spaghetti,"Spaghetti Aglio e olio (Teigwaren eifrei, mit Knoblauch und Öl)",,
+sesam,19,30 g Sesam,Tahin (Sesammus),,
+sesam,19,30 g Sesam,,Sesam,
+sesam,19,30 g Sesam,,,Sesamöl
+paniermehl,18,2 EL Paniermehl,Paniermehl/Semmelbrösel/Semmelmehl,,
+paniermehl,18,2 EL Paniermehl,,Paniermehl glutenfrei,
+salatgurke,18,200 g Salatgurke,"Kartoffelsalat mit Salatgurke und Mayonnaise, gestreckt mit Joghurt",,
+salatgurke,18,200 g Salatgurke,,Kartoffelsalat mit Salatgurke und Marinade (Gemüsebrühe),
+schmand,18,200 g Schmand,"Sauerrahm/Schmand, mind. 20 % Fett",,
+schmand,18,200 g Schmand,,Schmand-Dip mit Schnittlauch,
+schmand,18,200 g Schmand,,,Mandarinen-Schmand-Kuchen (Quark-Öl-Teig)
+gnocchi,18,1000 g Gnocchi,Gnocchi roh,,
+gnocchi,18,1000 g Gnocchi,,Gnocchi tiefgefroren,
+gnocchi,18,1000 g Gnocchi,,,Gnocchi gekocht
+lauch,17,50 g Lauch,Schnittlauch roh,,
+lauch,17,50 g Lauch,,Schnittlauch getrocknet,
+lauch,17,50 g Lauch,,,"Porree/Lauch, roh"
+zitrone,17, Zitrone,"Eistee mit Zitronen-/Pfirsichgeschmack, gesüßt",,
+zitrone,17, Zitrone,,Citronensäure/Zitronensäure (E 330),
+zitrone,17, Zitrone,,,Zitronenlimonade
+essig,16,80 g Essig,Apfelessig,,
+essig,16,80 g Essig,,Essigsäure 60 % (E 260),
+essig,16,80 g Essig,,,Weinessig
+"garnelen, geschält",16,"400 g Garnelen, roh, geschält","Kartoffel geschält, roh",,
+"garnelen, geschält",16,"400 g Garnelen, roh, geschält",,"Apfel geschält, roh",
+"garnelen, geschält",16,"400 g Garnelen, roh, geschält",,,"Apfel geschält, getrocknet"
+emmentaler,15,200 g Emmentaler,Emmentaler mind. 45 % Fett i. Tr.,,
+emmentaler,15,200 g Emmentaler,,"Clubsandwich mit Thunfisch, Gurke, Emmentaler und Mayonnaise",
+"koriander, gemahlen",15,"1 TL Koriander, gemahlen",Haselnuss gemahlen,,
+"koriander, gemahlen",15,"1 TL Koriander, gemahlen",,"Mandel süß, gemahlen",
+"koriander, gemahlen",15,"1 TL Koriander, gemahlen",,,Walnuss gemahlen
+rote linsen,15,"250 g rote Linsen, getrocknet","Rote Rübe/Rote Bete, roh",,
+rote linsen,15,"250 g rote Linsen, getrocknet",,Vegetarische Bratwurst (aus Tofu und Weizenprotein),
+rote linsen,15,"250 g rote Linsen, getrocknet",,,Sojaproteinisolat
+cheddar,15,150 g Cheddar,Chester (Cheddar) mind. 50 % Fett i. Tr.,,
+cheddar,15,150 g Cheddar,,Chester (Cheddar) mind. 45 % Fett i. Tr.,
+süßkartoffeln,15,1000 g Süßkartoffeln,Süßkartoffeln gedünstet (mit Fett und Salz),,
+süßkartoffeln,15,1000 g Süßkartoffeln,,"Süßkartoffeln und Broccoli gedünstet, mit gekochtem Rindfleisch und Grundsauce hell/weiß",

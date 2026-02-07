@@ -1,0 +1,78 @@
+ingredient_name,suggested_bls_entry,bls_code,category,notes
+Eier,Hühnereier Frischei (gekocht Wasser) durchschnittlich,5001,Eier und Eiprodukte,Basic ingredient - most common unmatched (86x). Use average for mixed cooking methods.
+Mehl,Weizenmehl ausgelöst aus Getreide,20004,Getreide und Getreideprodukte,Generic wheat flour - most common (78x). Specify type if recipe indicates rye or other grains.
+Möhren,Karotte Basismenge,11018,Gemüse und Gemüseprodukte,Root vegetable - common (72x). Both Möhren and Karotten refer to the same ingredient.
+Koriander,Koriander getrocknet,1030,Gewürze und Gewürzmischungen,Ground coriander common in curry recipes (68x). May need "Koriander gemahlen" variant.
+Ingwer,Ingwer,11134,Gemüse und Gemüseprodukte,Root vegetable used as spice (60x). Often fresh in recipes; preserved/dried variants available.
+rote Paprika,Paprika rot Rohrohstoff Basismenge,11108,Gemüse und Gemüseprodukte,Fresh red bell pepper (57x). Differentiate from Paprika edelsüß (spice powder).
+Speisestärke,Kartoffelstärke,14041,Weitere Lebensmittel,Thickening agent (53x). May also be corn starch - check context.
+Champignons,Champignon kultiviert (Zuchtchampignon),11065,Gemüse und Gemüseprodukte,Fresh cultivated mushroom (53x). Differentiate from canned versions.
+Crème fraîche,Crème fraîche,6016,Milch und Milchprodukte,French sour cream (51x). Higher fat content than regular sour cream.
+Paprika edelsüß,Paprika edelsüß gemahlen,1018,Gewürze und Gewürzmischungen,Mild paprika powder (44x). Differentiate from sharp "Paprika rosenscharf".
+Ei,Hühnereier Frischei (gekocht Wasser) durchschnittlich,5001,Eier und Eiprodukte,Singular form of Eier (44x). Same mapping as Eier.
+Oregano,Oregano getrocknet,1033,Gewürze und Gewürzmischungen,Dried oregano (43x). Check if fresh needed in recipes.
+Senf,Senf Tafelsenf mittelscharf,4039,Saucen und Würzmittel,Mustard condiment (39x). May vary by type (mild/sharp).
+Kartoffeln,Kartoffeln mehlige roh Basismenge,11143,Gemüse und Gemüseprodukte,Potatoes (39x). Specify if starchy vs. waxy type matters for recipe.
+Erbsen,Erbse grün reife frische,11042,Gemüse und Gemüseprodukte,Green peas (38x). Differentiate from frozen vs. fresh.
+Schnittlauch,Schnittlauch roh,11100,Gemüse und Gemüseprodukte,Chives - fresh herb (36x). Often used as garnish.
+Muskat,Muskatnuss gemahlen,1031,Gewürze und Gewürzmischungen,Ground nutmeg (34x). Powdered form most common in recipes.
+Karotten,Karotte Basismenge,11018,Gemüse und Gemüseprodukte,Same as Möhren (33x). Both terms for orange root vegetable.
+Thymian,Thymian getrocknet,1032,Gewürze und Gewürzmischungen,Dried thyme (32x). Often used in Mediterranean dishes.
+Porree,Lauch (Porree) Basismenge,11044,Gemüse und Gemüseprodukte,Leek vegetable (32x). Mild onion-like flavor.
+Nudeln,Spaghettiware Weizen Trockennudeln,20078,Getreide und Getreideprodukte,Generic pasta (31x). Specify type if known (spaghetti, penne, etc.).
+rote Chilischote,Chili rot frische,11114,Gemüse und Gemüseprodukte,Fresh red chili pepper (29x). Heat level varies by variety.
+Feta,Schafskäse Feta,6066,Milch und Milchprodukte,Greek feta cheese (26x). Used in Mediterranean dishes.
+Curry,Currypulver,1021,Gewürze und Gewürzmischungen,Curry spice blend (26x). Composition varies - note if specific type indicated.
+Dill,Dill getrocknet,1034,Gewürze und Gewürzmischungen,Dried dill herb (25x). May be fresh in some recipes.
+Chiliflocken,Chili getrocknet geschrotet,1012,Gewürze und Gewürzmischungen,Dried red chili flakes (24x). Standard hot spice.
+Brokkoliröschen,Broccoli roh Basismenge,11038,Gemüse und Gemüseprodukte,Broccoli florets (23x). Cut piece of florets.
+Babyspinat,Spinat roh Basismenge,11053,Gemüse und Gemüseprodukte,Young tender spinach (23x). Milder than mature spinach.
+Pinienkerne,Kiefer-Pinienkerne,7049,Nüsse und Nussprodukte,Pine nuts (22x). Often toasted in recipes.
+Risottoreis,Reis Risotto Arborio,20022,Getreide und Getreideprodukte,Arborio short-grain rice (22x). Specific variety for creamy risotto.
+Spaghetti,Spaghettiware Weizen Trockennudeln,20078,Getreide und Getreideprodukte,Spaghetti pasta (22x). Specific pasta shape.
+Linguine,Bandnudeln Weizen Trockennudeln,20077,Getreide und Getreideprodukte,Flat ribbon pasta (20x). Similar to fettuccine.
+Sesam,Sesam,7048,Nüsse und Nussprodukte,Sesame seeds (19x). May be toasted or raw.
+Minze,Minze Kraut frisch,11099,Gemüse und Gemüseprodukte,Fresh mint herb (19x). Mediterranean and Asian dishes.
+Paniermehl,Paniermehl,4007,Saucen und Würzmittel,Breadcrumbs for coating (18x). Standard breading ingredient.
+Salatgurke,Gurke Salat roh Basismenge,11035,Gemüse und Gemüseprodukte,Salad cucumber (18x). Crisp fresh vegetable.
+Schmand,Schmand,6004,Milch und Milchprodukte,Sour cream variant (18x). Higher fat than low-fat yogurt.
+Gnocchi,Gnocchi tiefgekühlt,20091,Getreide und Getreideprodukte,Frozen potato dumplings (18x). Pre-made convenience product.
+Lauch,Lauch (Porree) Basismenge,11044,Gemüse und Gemüseprodukte,Leek same as Porree (17x).
+Zitrone,Zitrone mit Saft Basismenge,12006,Obst und Obstprodukte,Lemon (17x). Citrus fruit used for juice and zest.
+Essig,Essig Speiseessig Weinessig,4065,Saucen und Würzmittel,Vinegar (16x). Wine vinegar standard type.
+Garnelen geschält,Garnele Nordseegarnele geschält,2026,Fische und Fischprodukte,Peeled shrimp (16x). Ready-to-use form.
+Emmentaler,Emmentaler,6040,Milch und Milchprodukte,Swiss hard cheese (15x). Mild nutty flavor.
+rote Linsen,Linse rot geschält,10017,Hülsenfrüchte und Ölsamen,Red lentils (15x). Quick-cooking legume.
+Cheddar,Cheddar,6045,Milch und Milchprodukte,Hard aged cheese (15x). Sharp flavor.
+Süßkartoffeln,Süßkartoffel Basismenge,11150,Gemüse und Gemüseprodukte,Sweet potato (15x). Orange root vegetable.
+Blattspinat,Spinat roh Basismenge,11053,Gemüse und Gemüseprodukte,Mature spinach leaves (15x). Larger leaves than baby spinach.
+Speckwürfel,Speck durchwachsen,3057,Fleisch und Fleischprodukte,Diced bacon (14x). Cured pork product.
+Knollensellerie,Sellerie Knollen roh Basismenge,11043,Gemüse und Gemüseprodukte,Celeriac root (14x). Different from celery stalks.
+Eigelb,Hühnereier Eidotter Eigelb,5003,Eier und Eiprodukte,Egg yolk (14x). Separated from white.
+Paprika rosenscharf,Paprika rosenscharf gemahlen,1019,Gewürze und Gewürzmischungen,Hot paprika powder (13x). Spicy variant of paprika.
+Majoran,Majoran getrocknet,1049,Gewürze und Gewürzmischungen,Dried marjoram (13x). Similar to oregano but milder.
+Hokkaido-Kürbis,Kürbis hokkaido,11062,Gemüse und Gemüseprodukte,Japanese pumpkin (12x). Orange winter squash.
+Gouda,Gouda,6041,Milch und Milchprodukte,Dutch semi-hard cheese (12x). Creamy mild flavor.
+Fischsauce,Fischsauce,4064,Saucen und Würzmittel,Asian fermented sauce (12x). Used in Southeast Asian cuisine.
+Brokkoli,Broccoli roh Basismenge,11038,Gemüse und Gemüseprodukte,Broccoli whole head (12x).
+Mayonnaise,Mayonnaise,4040,Saucen und Würzmittel,Emulsified condiment (12x). Egg-based sauce.
+Gorgonzola,Gorgonzola,6048,Milch und Milchprodukte,Italian blue cheese (12x). Pungent veined cheese.
+Zimt,Zimt gemahlen,1025,Gewürze und Gewürzmischungen,Ground cinnamon (11x). Warm spice for baking.
+Mais aus der Dose,Mais Körner,11046,Gemüse und Gemüseprodukte,Canned corn kernels (11x). Convenient form.
+Schinken,Schweineschinken gekocht,3024,Fleisch und Fleischprodukte,Ham (11x). Cured pork product.
+Backpulver,Backpulver,4006,Saucen und Würzmittel,Baking powder (11x). Leavening agent.
+Kurkuma,Kurkuma gemahlen,1020,Gewürze und Gewürzmischungen,Ground turmeric (11x). Golden spice for curries.
+Bandnudeln,Bandnudeln Weizen Trockennudeln,20077,Getreide und Getreideprodukte,Flat ribbon pasta (11x). Similar to fettuccine/pappardelle.
+Staudensellerie,Sellerie Stangen roh Basismenge,11041,Gemüse und Gemüseprodukte,Celery stalks (11x). Different from celeriac root.
+Lorbeerblatt,Lorbeerblatt getrocknet,1023,Gewürze und Gewürzmischungen,Dried bay leaf (10x). Aromatics for cooking.
+Ajvar,Ajvar,4063,Saucen und Würzmittel,Roasted red pepper spread (10x). Balkan condiment.
+Gurke,Gurke Salat roh Basismenge,11035,Gemüse und Gemüseprodukte,Cucumber (10x).
+Haferflocken,Hafer Flocken,20016,Getreide und Getreideprodukte,Oats (10x). Breakfast staple.
+gelbe Paprika,Paprika gelb Rohrohstoff Basismenge,11107,Gemüse und Gemüseprodukte,Fresh yellow bell pepper (10x). Sweet pepper.
+Bergkäse,Bergkäse,6043,Milch und Milchprodukte,Alpine hard cheese (10x). Mountain region cheese.
+Pecorino,Pecorino,6049,Milch und Milchprodukte,Italian sheep cheese (10x). Hard salty cheese.
+Worcester-Sauce,Worcester-Sauce,4066,Saucen und Würzmittel,Worcestershire sauce (10x). Complex condiment.
+Garam Masala,Garam Masala,1009,Gewürze und Gewürzmischungen,Indian spice blend (9x). Complex warm flavor.
+n Muskat,Muskatnuss gemahlen,1031,Gewürze und Gewürzmischungen,Parsed fragment of Muskat (26x) - data cleaning artifact. Maps to same entry as Muskat.
+"Garnelen, geschält",Garnele Nordseegarnele geschält,2026,Fische und Fischprodukte,"Peeled shrimp (16x). Parsed with comma separator, same as Garnelen geschält."
+"Lachsfilet, ohne Haut",Lachsfilet ohne Haut,2015,Fische und Fischprodukte,"Salmon fillet (14x). Parsed with comma separator, use salmon fillet BLS entry (2015)."

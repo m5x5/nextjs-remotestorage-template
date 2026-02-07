@@ -1,0 +1,179 @@
+MEAL PLAN OPTIMIZATION REPORT
+======================================================================
+
+Household Size: 2
+Meals per Day: 2
+Total Recipes Selected: 7
+Total Rating (week): -2138.0
+Average Rating: -305.43
+Total Lactose (week): 165.2 mg
+Average Lactose per Day: 23.6 mg
+
+WEEKLY MEAL PLAN (One recipe per day):
+----------------------------------------------------------------------
+  Monday: Käsefondue
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r84246
+    Rating: -522.0
+    Lactose: 0mg
+    Nutrients (per meal for 2 people):
+      Calories: 1635 kcal
+      Protein: 110.5g
+      Fat: 116.6g
+      Carbs: 0.9g
+      Fiber: 1.2g
+      Vitamin A: 955µg
+      Vitamin C: 14mg
+      Vitamin B12: 8.90µg
+      Iron: 1.1mg
+      Calcium: 4654mg
+      Magnesium: 180mg
+    Lactose-free ingredients: 7
+    Unmatched ingredients (2):
+      • 20 g Speisestärke
+      • ½ TL Muskat
+
+  Tuesday: Käsefondue (mediterran)
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r82579
+    Rating: -65.0
+    Lactose: 0mg
+    Nutrients (per meal for 2 people):
+      Calories: 1641 kcal
+      Protein: 110.8g
+      Fat: 116.7g
+      Carbs: 1.7g
+      Fiber: 1.5g
+      Vitamin A: 981µg
+      Vitamin C: 20mg
+      Vitamin B12: 8.90µg
+      Iron: 1.2mg
+      Calcium: 4658mg
+      Magnesium: 183mg
+    Lactose-free ingredients: 9
+    Unmatched ingredients (2):
+      • 20 g Speisestärke
+      • ½ TL Muskat
+
+  Wednesday: Chäsfondue
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r417190
+    Rating: -26.0
+    Lactose: 0mg
+    Nutrients (per meal for 2 people):
+      Calories: 1796 kcal
+      Protein: 110.4g
+      Fat: 116.6g
+      Carbs: 48.6g
+      Fiber: 1.2g
+      Vitamin A: 955µg
+      Vitamin C: 11mg
+      Vitamin B12: 8.90µg
+      Iron: 1.1mg
+      Calcium: 4650mg
+      Magnesium: 176mg
+    Lactose-free ingredients: 6
+    Unmatched ingredients (4):
+      • 2 EL Maisstärke (z. B. Maizena)
+      • 20 g Kirsch
+      • ½ TL Muskatnuss, gemahlen
+      • 700 g Weissbrot
+
+  Thursday: Ofenpasta in Gemüsesauce
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r920874
+    Rating: -241.0
+    Lactose: 151mg
+    Nutrients (per meal for 2 people):
+      Calories: 1294 kcal
+      Protein: 56.6g
+      Fat: 60.6g
+      Carbs: 122.6g
+      Fiber: 12.8g
+      Vitamin A: 1600µg
+      Vitamin C: 329mg
+      Vitamin B12: 2.78µg
+      Iron: 6.3mg
+      Calcium: 1654mg
+      Magnesium: 202mg
+    Lactose contributors:
+      • 50 g Butter: 300.0mg
+      • ½ - 1 TL Currypulver: 2.5mg
+    Lactose-free ingredients: 13
+    Unmatched ingredients (1):
+      • 400 g Sauerrahm
+
+  Friday: Tomaten-Paprika-Reis mit Gemüse und Schafskäse
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r902490
+    Rating: -237.0
+    Lactose: 0mg
+    Nutrients (per meal for 2 people):
+      Calories: 1319 kcal
+      Protein: 61.5g
+      Fat: 79.5g
+      Carbs: 28.9g
+      Fiber: 9.8g
+      Vitamin A: 1109µg
+      Vitamin C: 366mg
+      Vitamin B12: 4.45µg
+      Iron: 2.6mg
+      Calcium: 2417mg
+      Magnesium: 163mg
+    Lactose-free ingredients: 16
+    Unmatched ingredients (2):
+      • 1 TL Rosmarin, getrocknet, gehackt
+      • 250 g Reis, parboiled
+
+  Saturday: Paprika-Zucchini-Pasta
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r216655
+    Rating: -644.0
+    Lactose: 14mg
+    Nutrients (per meal for 2 people):
+      Calories: 2034 kcal
+      Protein: 103.7g
+      Fat: 79.8g
+      Carbs: 205.7g
+      Fiber: 30.5g
+      Vitamin A: 777µg
+      Vitamin C: 486mg
+      Vitamin B12: 0.50µg
+      Iron: 20.8mg
+      Calcium: 599mg
+      Magnesium: 367mg
+    Lactose contributors:
+      • 50 g Parmesan: 28.0mg
+    Lactose-free ingredients: 13
+    Unmatched ingredients (1):
+      • 1 getrocknetes Lorbeerblatt
+
+  Sunday: Tortilla-Calzone
+    URL: https://cookidoo.de/recipes/recipe/de-DE/r753852
+    Rating: -403.0
+    Lactose: 0mg
+    Nutrients (per meal for 2 people):
+      Calories: 1595 kcal
+      Protein: 83.5g
+      Fat: 51.6g
+      Carbs: 168.3g
+      Fiber: 43.2g
+      Vitamin A: 1558µg
+      Vitamin C: 621mg
+      Vitamin B12: 2.47µg
+      Iron: 29.0mg
+      Calcium: 1188mg
+      Magnesium: 447mg
+    Lactose-free ingredients: 11
+    Unmatched ingredients (1):
+      •  Pizzagewürz
+
+
+======================================================================
+NUTRITIONAL SUMMARY:
+----------------------------------------------------------------------
+ENERCC_kcal: 12110.0/14000.0 (86.5%)
+PROT_g: 620.0/385.0 (161.0%)
+FAT_g: 687.0/490.0 (140.2%)
+CHO_g: 717.0/1750.0 (41.0%)
+FIBT_g: 100.1/210.0 (47.7%)
+VITA_ug: 7935.7/4900.0 (162.0%)
+VITC_mg: 1845.6/525.0 (351.5%)
+VITB12_ug: 36.9/16.8 (219.7%)
+FE_mg: 62.1/56.0 (110.9%)
+CA_mg: 19820.2/7000.0 (283.1%)
+MG_mg: 1717.4/2800.0 (61.3%)

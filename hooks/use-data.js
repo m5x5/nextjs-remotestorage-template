@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
+import { DEFAULT_DAILY_GOALS } from "../lib/nutrient-registry"
 
 /**
  * Hook to sync data with RemoteStorage
@@ -11,14 +12,30 @@ import { useState, useEffect, useCallback, useRef } from "react"
  */
 export function useData(remoteStorage) {
   // State
-  const [items, setItems] = useState([])
-  const [itemsList, setItemsList] = useState([])
-  const [settings, setSettings] = useState({ theme: 'light', language: 'en' })
+  const [recipes, setRecipes] = useState([])
+  const [recipesList, setRecipesList] = useState([])
+  const [settings, setSettings] = useState({
+    theme: 'light',
+    language: 'en',
+    defaultServings: 2,
+    filteredIngredients: [],
+    weekRecipeIds: [],
+    optimizeNumToSelect: 7,
+    optimizeMinMatchRate: 60,
+    optimizePerMealLimits: {},
+    optimizePerMealMinimums: {},
+    dailyRecommended: DEFAULT_DAILY_GOALS,
+  })
   const [isLoading, setIsLoading] = useState(true)
   const [isConnected, setIsConnected] = useState(false)
 
   // Ref to prevent reload loops during saves
   const isSavingRef = useRef(false)
+  // Skip the next loadAllData from change handler (e.g. right after we saved settings in runOptimization)
+  const skipNextLoadAllDataRef = useRef(false)
+  // Ref to latest settings so updater-based saveSettings always merges with current state
+  const settingsRef = useRef(settings)
+  settingsRef.current = settings
 
   // Check connection status
   useEffect(() => {
@@ -50,20 +67,94 @@ export function useData(remoteStorage) {
       return
     }
 
+    console.log("[RS] loadAllData: start")
     setIsLoading(true)
 
     try {
-      // Load items list (metadata)
-      const list = await remoteStorage.mymodule.getItemsList()
-      setItemsList(list)
-
-      // Load settings
       const loadedSettings = await remoteStorage.mymodule.loadSettings()
       setSettings(loadedSettings)
+
+      const weekIds = loadedSettings.weekRecipeIds || []
+      if (weekIds.length > 0) {
+        const loaded = await Promise.all(weekIds.map((id) => remoteStorage.mymodule.loadRecipe(id)))
+        const valid = loaded.filter(Boolean)
+        setRecipes(valid)
+        console.log("[RS] loadAllData: weekIds=" + weekIds.length + ", loaded=" + valid.length)
+        const validIds = weekIds.filter((_, i) => loaded[i] != null)
+        if (validIds.length !== weekIds.length) {
+          setSettings((prev) => ({ ...prev, weekRecipeIds: validIds }))
+        }
+      } else {
+        setRecipes([])
+        console.log("[RS] loadAllData: weekIds=0, setRecipes([])")
+      }
     } catch (error) {
       console.error("Error loading data:", error)
     } finally {
       setIsLoading(false)
+    }
+  }, [remoteStorage, isConnected])
+
+  /** Load the recipe list (id/title) only. Call when opening Manage week or when Ingredients tab needs list. */
+  const loadRecipesList = useCallback(async () => {
+    if (!remoteStorage?.mymodule || !isConnected) return
+    try {
+      const list = await remoteStorage.mymodule.getRecipesList()
+      const uniqueMap = new Map()
+      list.forEach((r) => {
+        if (r && r.id) {
+          const existing = uniqueMap.get(r.id)
+          if (!existing || (r.updated_at && existing.updated_at && new Date(r.updated_at) > new Date(existing.updated_at))) {
+            uniqueMap.set(r.id, r)
+          }
+        }
+      })
+      setRecipesList(Array.from(uniqueMap.values()))
+    } catch (error) {
+      console.error("Error loading recipes list:", error)
+    }
+  }, [remoteStorage, isConnected])
+
+  /** Load full recipe data for given ids and set as current recipes (e.g. week recipes after optimization). */
+  const loadRecipesByIds = useCallback(async (ids) => {
+    if (!remoteStorage?.mymodule || !isConnected || !ids?.length) {
+      setRecipes([])
+      return
+    }
+    try {
+      const loaded = await Promise.all(ids.map((id) => remoteStorage.mymodule.loadRecipe(id)))
+      const valid = loaded.filter(Boolean)
+      setRecipes(valid)
+      console.log("[RS] loadRecipesByIds: requested=" + ids.length + ", loaded=" + valid.length)
+      const keptIds = ids.filter((_, i) => loaded[i] != null)
+      if (keptIds.length !== ids.length) {
+        setSettings((prev) => ({ ...prev, weekRecipeIds: keptIds }))
+      }
+    } catch (error) {
+      console.error("Error loading recipes by ids:", error)
+    }
+  }, [remoteStorage, isConnected])
+
+  /** Load all recipes (list + full bodies). For optimizer or Ingredients tab. Returns the array. */
+  const loadAllRecipesForOptimizer = useCallback(async () => {
+    if (!remoteStorage?.mymodule || !isConnected) return []
+    try {
+      const list = await remoteStorage.mymodule.getRecipesList()
+      const uniqueMap = new Map()
+      list.forEach((r) => {
+        if (r && r.id) {
+          const existing = uniqueMap.get(r.id)
+          if (!existing || (r.updated_at && existing.updated_at && new Date(r.updated_at) > new Date(existing.updated_at))) {
+            uniqueMap.set(r.id, r)
+          }
+        }
+      })
+      const ids = Array.from(uniqueMap.values()).map((r) => r.id)
+      const loaded = await Promise.all(ids.map((id) => remoteStorage.mymodule.loadRecipe(id)))
+      return loaded.filter(Boolean)
+    } catch (error) {
+      console.error("Error loading all recipes:", error)
+      return []
     }
   }, [remoteStorage, isConnected])
 
@@ -77,16 +168,39 @@ export function useData(remoteStorage) {
     loadAllData()
   }, [remoteStorage, isConnected, loadAllData])
 
+  // Debounce ref for change handler
+  const changeTimeoutRef = useRef(null)
+
   // Listen for remote changes
   useEffect(() => {
     if (!remoteStorage || !isConnected) return
 
     const changeHandler = (event) => {
-      // Don't reload if we're currently saving (prevents loops)
-      if (isSavingRef.current) return
+      if (isSavingRef.current) {
+        console.log("[RS] changeHandler: skip (isSaving)")
+        return
+      }
+      if (skipNextLoadAllDataRef.current) {
+        skipNextLoadAllDataRef.current = false
+        console.log("[RS] changeHandler: skip (skipNextLoadAllData)")
+        return
+      }
 
-      // Reload data when remote changes occur
-      loadAllData()
+      if (changeTimeoutRef.current) {
+        clearTimeout(changeTimeoutRef.current)
+      }
+      
+      changeTimeoutRef.current = setTimeout(() => {
+        if (skipNextLoadAllDataRef.current) {
+          skipNextLoadAllDataRef.current = false
+          changeTimeoutRef.current = null
+          console.log("[RS] changeHandler: skip after 200ms (skipNextLoadAllData)")
+          return
+        }
+        console.log("[RS] changeHandler: running loadAllData in 200ms")
+        loadAllData()
+        changeTimeoutRef.current = null
+      }, 200)
     }
 
     // RemoteStorage uses onChange with a path
@@ -97,17 +211,23 @@ export function useData(remoteStorage) {
     }
 
     return () => {
-      // Cleanup: RemoteStorage handles cleanup automatically
+      // Cleanup timeout on unmount
+      if (changeTimeoutRef.current) {
+        clearTimeout(changeTimeoutRef.current)
+      }
     }
   }, [remoteStorage, isConnected, loadAllData])
 
-  // ==================== ITEMS METHODS ====================
+  // ==================== RECIPES METHODS ====================
 
   /**
-   * Save an item
-   * @param {Object} item - The item to save
+   * Save a recipe
+   * @param {Object} recipe - The recipe to save
+   * @param {Object} [options] - Optional: { skipListUpdate: boolean, currentList: Array }
+   *   - skipListUpdate: if true, only the recipe file is written; list.json is not updated (call refreshRecipesList after a batch).
+   *   - currentList: if provided, passed to the module to avoid re-fetching the list.
    */
-  const saveItem = useCallback(async (item) => {
+  const saveRecipe = useCallback(async (recipe, options) => {
     if (!remoteStorage?.mymodule || !isConnected) {
       throw new Error("RemoteStorage is not connected. Please connect to RemoteStorage.")
     }
@@ -115,47 +235,72 @@ export function useData(remoteStorage) {
     isSavingRef.current = true
 
     try {
-      // Save to RemoteStorage
-      await remoteStorage.mymodule.saveItem(item)
+      const result = await remoteStorage.mymodule.saveRecipe(recipe, options)
 
-      // Reload items list to get updated metadata
-      const updatedList = await remoteStorage.mymodule.getItemsList()
-      setItemsList(updatedList)
+      if (options?.skipListUpdate) {
+        return result
+      }
+
+      const updatedList = await remoteStorage.mymodule.getRecipesList()
+      const uniqueMap = new Map()
+      updatedList.forEach(r => {
+        if (r && r.id) {
+          const existing = uniqueMap.get(r.id)
+          if (!existing ||
+              (r.updated_at && existing.updated_at &&
+               new Date(r.updated_at) > new Date(existing.updated_at))) {
+            uniqueMap.set(r.id, r)
+          } else if (!existing) {
+            uniqueMap.set(r.id, r)
+          }
+        }
+      })
+      setRecipesList(Array.from(uniqueMap.values()))
     } catch (error) {
-      console.error("Error saving item:", error)
-      // Reload to get correct state
-      await loadAllData()
+      console.error("Error saving recipe:", error)
+      await loadRecipesList()
       throw error
     } finally {
       setTimeout(() => {
         isSavingRef.current = false
-      }, 100)
+      }, 300)
     }
-  }, [remoteStorage, isConnected, loadAllData])
+  }, [remoteStorage, isConnected, loadRecipesList])
 
   /**
-   * Load an item by ID
-   * @param {string} id - The item ID
+   * Merge a batch of recipe entries into list buckets and refresh local state (call after batch import with skipListUpdate).
+   * @param {Array<{id: string, title: string, updated_at: string}>} entriesToMerge
+   * @param {Object} [options] - { appendOnly: boolean } Pass { appendOnly: true } for import to avoid loading all buckets (faster).
+   */
+  const refreshRecipesList = useCallback(async (entriesToMerge, options) => {
+    if (!remoteStorage?.mymodule || !isConnected) return
+    await remoteStorage.mymodule.refreshRecipesList(entriesToMerge, options)
+    await loadRecipesList()
+  }, [remoteStorage, isConnected, loadRecipesList])
+
+  /**
+   * Load a recipe by ID
+   * @param {string} id - The recipe ID
    * @returns {Promise<Object|null>}
    */
-  const loadItem = useCallback(async (id) => {
+  const loadRecipe = useCallback(async (id) => {
     if (!remoteStorage?.mymodule || !isConnected) {
       return null
     }
 
     try {
-      return await remoteStorage.mymodule.loadItem(id)
+      return await remoteStorage.mymodule.loadRecipe(id)
     } catch (error) {
-      console.error("Error loading item:", error)
+      console.error("Error loading recipe:", error)
       return null
     }
   }, [remoteStorage, isConnected])
 
   /**
-   * Delete an item by ID
-   * @param {string} id - The item ID
+   * Delete a recipe by ID
+   * @param {string} id - The recipe ID
    */
-  const deleteItem = useCallback(async (id) => {
+  const deleteRecipe = useCallback(async (id) => {
     if (!remoteStorage?.mymodule || !isConnected) {
       throw new Error("RemoteStorage is not connected")
     }
@@ -163,40 +308,57 @@ export function useData(remoteStorage) {
     isSavingRef.current = true
 
     try {
-      await remoteStorage.mymodule.deleteItem(id)
+      await remoteStorage.mymodule.deleteRecipe(id)
 
-      // Reload items list
-      const updatedList = await remoteStorage.mymodule.getItemsList()
-      setItemsList(updatedList)
+      // Reload recipes list with deduplication
+      const updatedList = await remoteStorage.mymodule.getRecipesList()
+      
+      // Robust deduplication using Map
+      const uniqueMap = new Map()
+      updatedList.forEach(r => {
+        if (r && r.id) {
+          uniqueMap.set(r.id, r)
+        }
+      })
+      
+      const uniqueList = Array.from(uniqueMap.values())
+      setRecipesList(uniqueList)
+      setRecipes((prev) => prev.filter((r) => r && r.id !== id))
     } catch (error) {
-      console.error("Error deleting item:", error)
+      console.error("Error deleting recipe:", error)
       throw error
     } finally {
       setTimeout(() => {
         isSavingRef.current = false
-      }, 100)
+      }, 300)
     }
   }, [remoteStorage, isConnected])
 
   // ==================== SETTINGS METHODS ====================
 
   /**
-   * Save settings
-   * @param {Object} newSettings - Settings object to save
+   * Save settings. Accepts either a full settings object or an updater (prev => next).
+   * Using an updater ensures we merge with the latest state (e.g. when saving optimization filters).
+   * @param {Object|((prev: Object) => Object)} newSettingsOrUpdater - Full settings or (prev) => next
    */
-  const saveSettings = useCallback(async (newSettings) => {
+  const saveSettings = useCallback(async (newSettingsOrUpdater) => {
     if (!remoteStorage?.mymodule || !isConnected) {
       throw new Error("RemoteStorage is not connected")
     }
+
+    const next =
+      typeof newSettingsOrUpdater === "function"
+        ? newSettingsOrUpdater(settingsRef.current)
+        : newSettingsOrUpdater
 
     isSavingRef.current = true
 
     try {
       // Optimistic update
-      setSettings(newSettings)
+      setSettings(next)
 
       // Save to RemoteStorage
-      await remoteStorage.mymodule.saveSettings(newSettings)
+      await remoteStorage.mymodule.saveSettings(next)
     } catch (error) {
       console.error("Error saving settings:", error)
       // Reload to get correct state
@@ -214,19 +376,30 @@ export function useData(remoteStorage) {
     isLoading,
     isConnected,
 
-    // Items
-    items,
-    itemsList,
-    saveItem,
-    loadItem,
-    deleteItem,
+    // Recipes
+    recipes,
+    recipesList,
+    saveRecipe,
+    loadRecipe,
+    deleteRecipe,
+    refreshRecipesList,
+    loadRecipesList,
+    loadRecipesByIds,
+    loadAllRecipesForOptimizer,
+    /** Update one recipe in the current recipes list (e.g. after editing in modal). */
+    updateRecipeInList: (recipe) => setRecipes((prev) => prev.map((r) => r && r.id === recipe.id ? recipe : r)),
 
     // Settings
     settings,
     saveSettings,
 
     // Utility
-    reload: loadAllData
+    reload: loadAllData,
+    /** Call before saveSettings + loadRecipesByIds so the next remote-change loadAllData is skipped (avoids overwriting with stale data). */
+    setSkipNextLoadAllData: () => {
+      skipNextLoadAllDataRef.current = true
+      console.log("[RS] setSkipNextLoadAllData: next changeHandler will skip loadAllData")
+    }
   }
 }
 

@@ -1,0 +1,189 @@
+================================================================================
+INGREDIENT MAPPING - QUICK REFERENCE
+================================================================================
+
+YOUR QUESTION: "How do I add a new mapping?"
+
+ANSWER: Use this command:
+
+  python add_mapping.py "ingredient_name" "BLS_Entry_Name" "Category"
+
+================================================================================
+EXAMPLES
+================================================================================
+
+Add Tortellini:
+  python add_mapping.py "tortellini" "Eierteigwaren Tortellini (Fleischfüllung) getrocknet" "Grains & Flour"
+
+Add Ravioli:
+  python add_mapping.py "ravioli" "Eierteigwaren Ravioli (Fleischfüllung) getrocknet" "Grains & Flour"
+
+Add Skrei (fish):
+  python add_mapping.py "skrei" "Seelachs roh" "Proteins & Meat"
+
+================================================================================
+BEFORE YOU ADD: VALIDATE
+================================================================================
+
+Always validate FIRST:
+
+  python validate_mapping.py "ingredient_name"
+
+This tells you:
+  ✅ Is it already mapped?
+  ✅ Does the BLS entry exist?
+  ✅ What nutrients will be used?
+  ✅ Any suggestions if not found?
+
+================================================================================
+AVAILABLE CATEGORIES
+================================================================================
+
+python add_mapping.py --categories
+
+  1. Dairy & Cheese
+  2. Fats & Oils
+  3. Grains & Flour
+  4. Legumes & Nuts
+  5. Liquids & Beverages
+  6. Proteins & Meat
+  7. Seasonings & Condiments
+  8. Specialty Items
+  9. Vegetables & Produce
+
+================================================================================
+VIEW ALL MAPPINGS
+================================================================================
+
+python add_mapping.py --list                    # All 112 mappings
+python add_mapping.py --list "Proteins"         # Filter by category
+
+================================================================================
+COMPLETE WORKFLOW
+================================================================================
+
+Step 1: Find what needs mapping
+  python recipe_unmatched_analysis.py
+  → Check unmatched_ingredients.csv
+
+Step 2: Validate it will work
+  python validate_mapping.py "ingredient_name"
+  → Shows BLS candidates and suggests exact name
+
+Step 3: Add the mapping
+  python add_mapping.py "ingredient" "BLS Name" "Category"
+  → Saved to ingredient_mappings.csv
+
+Step 4: Recalculate
+  python recipe_add_audit_trails.py
+  python recipe_weekly_analyzer.py
+  python optimization_meal_planner.py
+  → See: "Ingredient matching: X.X%"
+
+================================================================================
+HOW IT WORKS
+================================================================================
+
+ingredient_mappings.csv (THE CSV - this is what you edit/view)
+  ↓
+ingredient_mapping_config.py (loads the CSV automatically)
+  ↓
+recipe_add_audit_trails.py (uses the new mappings)
+  ↓
+recipe_database.csv (updated with better matches)
+  ↓
+optimization results (more accurate nutrition)
+
+================================================================================
+KEY POINTS
+================================================================================
+
+✓ Use the CSV: ingredient_mappings.csv
+✓ Add with: python add_mapping.py "..." "..." "..."
+✓ Validate with: python validate_mapping.py "ingredient"
+✓ View all with: python add_mapping.py --list
+✓ Changes are AUTOMATIC (no restarts needed)
+✓ One command handles everything
+
+================================================================================
+COMMON QUESTIONS
+================================================================================
+
+Q: What if I make a typo?
+A: run python validate_mapping.py "ingredient" first
+
+Q: Will my change be used?
+A: YES - automatically. No restarts needed.
+
+Q: How do I know if it worked?
+A: Match rate increases after python recipe_add_audit_trails.py
+
+Q: Can I edit the CSV directly?
+A: YES - open in Excel/Sheets, make changes, save
+
+Q: What if BLS entry name has commas?
+A: The CSV handles it - enclose in quotes: "Vollmilch frisch, 3,5 % Fett..."
+
+================================================================================
+TYPICAL SESSION
+================================================================================
+
+# Find unmatched ingredients
+$ python recipe_unmatched_analysis.py
+→ See: tortellini (28), ravioli (26), skrei (32)
+
+# Test one
+$ python validate_mapping.py "tortellini"
+→ Shows candidates
+
+# Add it
+$ python add_mapping.py "tortellini" "Eierteigwaren Tortellini (Fleischfüllung) getrocknet" "Grains & Flour"
+→ ✓ Added
+
+# Add more
+$ python add_mapping.py "ravioli" "Eierteigwaren Ravioli (Fleischfüllung) getrocknet" "Grains & Flour"
+$ python add_mapping.py "skrei" "Seelachs roh" "Proteins & Meat"
+
+# Recalculate
+$ python recipe_add_audit_trails.py
+→ Shows: "Ingredient matching: 59.8% (was 59.5%)"
+
+# Check weekly plan
+$ python recipe_weekly_analyzer.py
+$ python optimization_meal_planner.py
+
+# Review results
+$ cat optimization_report.txt | grep -i match
+→ See improvement
+
+================================================================================
+GET HELP
+================================================================================
+
+python add_mapping.py --help                     # Command help
+python add_mapping.py --list                     # View all mappings
+python add_mapping.py --categories               # Show categories
+python validate_mapping.py "ingredient"          # Validate before adding
+
+Files:
+  SOLUTION_SUMMARY.md            Full explanation
+  MAPPING_CSV_GUIDE.md           CSV-specific guide
+  ingredient_mappings.csv        The CSV with all mappings
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Run: python recipe_unmatched_analysis.py
+2. Pick top 5 unmatched ingredients
+3. For each: python add_mapping.py "..." "..." "..."
+4. Recalculate: python recipe_add_audit_trails.py
+5. See match rate improve!
+
+Current state: 59.5% match rate (112 mappings)
+Target: 75%+ match rate
+
+Adding 10-15 more mappings should reach 65-70%
+Adding 30+ more mappings should reach 75%+
+
+================================================================================

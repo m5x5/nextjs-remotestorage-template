@@ -3,7 +3,9 @@
 import {
   HomeIcon,
   Cog6ToothIcon,
-  CubeIcon
+  CubeIcon,
+  ShoppingCartIcon,
+  ChartBarIcon
 } from "@heroicons/react/24/outline"
 import { useNavigation } from "../contexts/NavigationContext"
 
@@ -30,6 +32,35 @@ export function Sidebar() {
             <HomeIcon
               className={`h-6 w-6 transition-colors ${
                 activeTab === "home"
+                  ? "text-primary"
+                  : "text-muted-foreground group-hover:text-primary"
+              }`}
+            />
+          </button>
+          <button
+            onClick={() => setActiveTab("ingredients")}
+            className={`group rounded-lg p-2 transition-colors ${
+              activeTab === "ingredients" ? "bg-primary/10" : "hover:bg-muted"
+            }`}
+          >
+            <ShoppingCartIcon
+              className={`h-6 w-6 transition-colors ${
+                activeTab === "ingredients"
+                  ? "text-primary"
+                  : "text-muted-foreground group-hover:text-primary"
+              }`}
+            />
+          </button>
+          <button
+            onClick={() => setActiveTab("optimize")}
+            className={`group rounded-lg p-2 transition-colors ${
+              activeTab === "optimize" ? "bg-primary/10" : "hover:bg-muted"
+            }`}
+            title="Optimize week"
+          >
+            <ChartBarIcon
+              className={`h-6 w-6 transition-colors ${
+                activeTab === "optimize"
                   ? "text-primary"
                   : "text-muted-foreground group-hover:text-primary"
               }`}
@@ -67,6 +98,35 @@ export function Sidebar() {
           <HomeIcon
             className={`h-6 w-6 transition-colors ${
               activeTab === "home"
+                ? "text-primary"
+                : "text-muted-foreground group-hover:text-primary"
+            }`}
+          />
+        </button>
+        <button
+          onClick={() => setActiveTab("ingredients")}
+          className={`group rounded-lg p-2 transition-colors ${
+            activeTab === "ingredients" ? "bg-primary/10" : "hover:bg-muted"
+          }`}
+        >
+          <ShoppingCartIcon
+            className={`h-6 w-6 transition-colors ${
+              activeTab === "ingredients"
+                ? "text-primary"
+                : "text-muted-foreground group-hover:text-primary"
+            }`}
+          />
+        </button>
+        <button
+          onClick={() => setActiveTab("optimize")}
+          className={`group rounded-lg p-2 transition-colors ${
+            activeTab === "optimize" ? "bg-primary/10" : "hover:bg-muted"
+          }`}
+          title="Optimize week"
+        >
+          <ChartBarIcon
+            className={`h-6 w-6 transition-colors ${
+              activeTab === "optimize"
                 ? "text-primary"
                 : "text-muted-foreground group-hover:text-primary"
             }`}
