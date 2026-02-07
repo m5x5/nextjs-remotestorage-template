@@ -5,6 +5,7 @@ import { useRemoteStorage } from "@/hooks/use-remote-storage"
 import { useData } from "@/hooks/use-data"
 import { MyModule } from "@/lib/remotestorage-module"
 import RemoteStorageWidget from "@/components/RemoteStorageWidget"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card"
 import { usePathname } from "next/navigation"
 
 const RemoteStorageContext = createContext(null)
@@ -52,7 +53,18 @@ export function RemoteStorageProvider({ children }) {
     <RemoteStorageContext.Provider value={value}>
       {children}
       {/* Widget for connecting to RemoteStorage - only show on settings page */}
-      {remoteStorage && pathname === "/settings" && <RemoteStorageWidget remoteStorage={remoteStorage} />}
+      {remoteStorage && pathname === "/settings" && (
+        <div className="fixed bottom-5 right-5 z-[1000] w-full max-w-sm px-4 md:px-0 md:max-w-[22rem]">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Storage connection</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <RemoteStorageWidget remoteStorage={remoteStorage} embedded />
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </RemoteStorageContext.Provider>
   )
 }

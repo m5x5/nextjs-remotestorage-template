@@ -7,7 +7,8 @@ import {
   Cog6ToothIcon,
   CubeIcon,
   ShoppingCartIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  ClockIcon,
 } from "@heroicons/react/24/outline"
 
 function NavLink({ href, isActive, icon: Icon, title }) {
@@ -45,6 +46,7 @@ export function Sidebar() {
         {/* Navigation Icons */}
         <nav className="flex flex-1 flex-col items-center justify-center gap-3">
           <NavLink href="/" isActive={pathname === "/"} icon={HomeIcon} title="Home" />
+          <NavLink href="/history" isActive={pathname === "/history" || pathname?.startsWith("/history/")} icon={ClockIcon} title="Week history" />
           <NavLink href="/ingredients" isActive={pathname === "/ingredients"} icon={ShoppingCartIcon} title="Ingredients" />
           <NavLink href="/optimize" isActive={pathname === "/optimize"} icon={ChartBarIcon} title="Optimize week" />
         </nav>
@@ -58,6 +60,7 @@ export function Sidebar() {
       {/* Mobile Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-card px-4 py-3 md:hidden">
         <NavLink href="/" isActive={pathname === "/"} icon={HomeIcon} title="Home" />
+        <NavLink href="/history" isActive={pathname === "/history" || pathname?.startsWith("/history/")} icon={ClockIcon} title="History" />
         <NavLink href="/ingredients" isActive={pathname === "/ingredients"} icon={ShoppingCartIcon} title="Ingredients" />
         <NavLink href="/optimize" isActive={pathname === "/optimize"} icon={ChartBarIcon} title="Optimize week" />
         <NavLink href="/settings" isActive={pathname === "/settings"} icon={Cog6ToothIcon} title="Settings" />

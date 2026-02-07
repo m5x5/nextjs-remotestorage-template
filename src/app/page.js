@@ -6,6 +6,7 @@ import MessageBanner from "@/components/home/MessageBanner"
 import HomeTab from "@/components/home/HomeTab"
 import ImportRecipesModal from "@/components/home/ImportRecipesModal"
 import ManageWeekModal from "@/components/home/ManageWeekModal"
+import SaveWeekModal from "@/components/home/SaveWeekModal"
 import RecipeDetailModal from "@/components/home/RecipeDetailModal"
 
 export default function Home() {
@@ -70,6 +71,12 @@ export default function Home() {
     setManageWeekSelectedIds,
     openManageWeekModal,
     handleSetWeekRecipes,
+    showSaveWeekModal,
+    setShowSaveWeekModal,
+    saveWeekLabel,
+    setSaveWeekLabel,
+    openSaveWeekModal,
+    handleSaveWeekToHistory,
     getMainNutrients,
     getAllNutrientPercentages,
     formatNutrientType,
@@ -102,6 +109,7 @@ export default function Home() {
         handleDelete={handleDelete}
         handleSetRecipeExcludedPin={handleSetRecipeExcludedPin}
         openManageWeekModal={openManageWeekModal}
+        openSaveWeekModal={openSaveWeekModal}
       />
 
       <ImportRecipesModal
@@ -122,6 +130,14 @@ export default function Home() {
         setManageWeekSelectedIds={setManageWeekSelectedIds}
         handleSetWeekRecipes={handleSetWeekRecipes}
         handleSetRecipeExcludedPin={handleSetRecipeExcludedPin}
+      />
+
+      <SaveWeekModal
+        isOpen={showSaveWeekModal}
+        onClose={() => setShowSaveWeekModal(false)}
+        saveWeekLabel={saveWeekLabel}
+        setSaveWeekLabel={setSaveWeekLabel}
+        onSave={handleSaveWeekToHistory}
       />
 
       <RecipeDetailModal

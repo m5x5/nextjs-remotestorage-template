@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "@/components/ui/Modal"
@@ -36,6 +37,13 @@ export default function HomeTab({
   handleDelete,
   handleSetRecipeExcludedPin,
   openManageWeekModal,
+  openSaveWeekModal,
+  showPinOptions = true,
+  showWeekActions = true,
+  title = "This week",
+  onCopyToCurrentWeek,
+  showEmptyStateAction = true,
+  emptyStateMessage,
 }) {
   const [goalKeyForBreakdown, setGoalKeyForBreakdown] = useState(null)
   const [openMenuId, setOpenMenuId] = useState(null)
@@ -106,23 +114,46 @@ export default function HomeTab({
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <h2 className="text-xl font-semibold">This week</h2>
+        <h2 className="text-xl font-semibold">{title}</h2>
         <div className="flex items-center gap-2">
-          <Link
-            href="/optimize"
-            className="inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-opacity border-2 border-dashed border-border bg-muted/50 text-muted-foreground hover:bg-muted hover:border-muted-foreground/50 px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            <ChartBarIcon className="h-4 w-4" />
-            Optimize week
-          </Link>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={openManageWeekModal}
-            className="flex items-center gap-2"
-          >
-            Manage week
-          </Button>
+          {onCopyToCurrentWeek != null ? (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={onCopyToCurrentWeek}
+              className="flex items-center gap-2"
+            >
+              Copy to current week
+            </Button>
+          ) : showWeekActions ? (
+            <>
+              {openSaveWeekModal && weekRecipes.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={openSaveWeekModal}
+                  className="flex items-center gap-2"
+                >
+                  Save this week
+                </Button>
+              )}
+              <Link
+                href="/optimize"
+                className="inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-opacity border-2 border-dashed border-border bg-muted/50 text-muted-foreground hover:bg-muted hover:border-muted-foreground/50 px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                <ChartBarIcon className="h-4 w-4" />
+                Optimize week
+              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={openManageWeekModal}
+                className="flex items-center gap-2"
+              >
+                Manage week
+              </Button>
+            </>
+          ) : null}
         </div>
       </div>
 
@@ -325,15 +356,19 @@ export default function HomeTab({
         <Card>
           <CardContent className="py-8 text-center space-y-4">
             <p className="text-muted-foreground">
-              {recipes.length === 0
+              {emptyStateMessage != null
+                ? emptyStateMessage
+                : recipes.length === 0
                 ? "No recipes yet. Import recipes from Settings."
                 : "No recipes selected for this week."}
             </p>
-            <Button variant="primary" onClick={openManageWeekModal}>
-              {recipes.length === 0
-                ? "Import recipes"
-                : "Select recipes for this week"}
-            </Button>
+            {showEmptyStateAction && (
+              <Button variant="primary" onClick={openManageWeekModal}>
+                {recipes.length === 0
+                  ? "Import recipes"
+                  : "Select recipes for this week"}
+              </Button>
+            )}
           </CardContent>
         </Card>
       ) : (
@@ -355,10 +390,12 @@ export default function HomeTab({
                 <div className="flex gap-4">
                   <div className="relative w-32 h-32 md:w-48 md:h-48 bg-muted overflow-hidden rounded-lg shrink-0">
                     {recipe.image ? (
-                      <img
+                      <Image
                         src={recipe.image}
                         alt={recipe.title}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        unoptimized
                         onError={(e) => {
                           e.target.style.display = "none"
                           e.target.nextSibling.style.display = "flex"
@@ -375,78 +412,80 @@ export default function HomeTab({
                         {recipe.title}
                       </h3>
                       <div className="flex items-center gap-0.5 shrink-0">
-                        {(recipe.excluded || recipe.pinned) && (
+                        {showPinOptions && (recipe.excluded || recipe.pinned) && (
                           <span className="flex items-center gap-0.5 text-muted-foreground" title={recipe.excluded ? "Excluded from optimization" : ""}>
                             {recipe.excluded && <NoSymbolIcon className="h-4 w-4" />}
                             {recipe.pinned && <MapPinIconSolid className="h-4 w-4 text-primary" title="Pinned to week" />}
                           </span>
                         )}
-                        <div className="relative" ref={openMenuId === recipe.id ? menuRef : null}>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setOpenMenuId((id) => (id === recipe.id ? null : recipe.id))
-                            }}
-                            className="rounded p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-                            aria-label="Recipe options"
-                            aria-expanded={openMenuId === recipe.id}
-                          >
-                            <EllipsisVerticalIcon className="h-5 w-5" />
-                          </button>
-                          {openMenuId === recipe.id && (
-                            <div
-                              className="absolute right-0 top-full mt-1 z-20 min-w-[200px] rounded-lg border border-border bg-card py-1 shadow-lg"
-                              role="menu"
-                              onClick={(e) => e.stopPropagation()}
+                        {showPinOptions && (
+                          <div className="relative" ref={openMenuId === recipe.id ? menuRef : null}>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setOpenMenuId((id) => (id === recipe.id ? null : recipe.id))
+                              }}
+                              className="rounded p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                              aria-label="Recipe options"
+                              aria-expanded={openMenuId === recipe.id}
                             >
-                              <button
-                                type="button"
-                                className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-muted"
-                                role="menuitem"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleSetRecipeExcludedPin?.(recipe.id, { excluded: !recipe.excluded })
-                                  setOpenMenuId(null)
-                                }}
+                              <EllipsisVerticalIcon className="h-5 w-5" />
+                            </button>
+                            {openMenuId === recipe.id && (
+                              <div
+                                className="absolute right-0 top-full mt-1 z-20 min-w-[200px] rounded-lg border border-border bg-card py-1 shadow-lg"
+                                role="menu"
+                                onClick={(e) => e.stopPropagation()}
                               >
-                                {recipe.excluded ? (
-                                  <>
-                                    <NoSymbolIcon className="h-4 w-4" />
-                                    Include in optimization
-                                  </>
-                                ) : (
-                                  <>
-                                    <NoSymbolIcon className="h-4 w-4" />
-                                    Exclude from optimization
-                                  </>
-                                )}
-                              </button>
-                              <button
-                                type="button"
-                                className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-muted"
-                                role="menuitem"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleSetRecipeExcludedPin?.(recipe.id, { pinned: !recipe.pinned })
-                                  setOpenMenuId(null)
-                                }}
-                              >
-                                {recipe.pinned ? (
-                                  <>
-                                    <MapPinIcon className="h-4 w-4" />
-                                    Unpin from week
-                                  </>
-                                ) : (
-                                  <>
-                                    <MapPinIcon className="h-4 w-4" />
-                                    Pin to week
-                                  </>
-                                )}
-                              </button>
-                            </div>
-                          )}
-                        </div>
+                                <button
+                                  type="button"
+                                  className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-muted"
+                                  role="menuitem"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleSetRecipeExcludedPin?.(recipe.id, { excluded: !recipe.excluded })
+                                    setOpenMenuId(null)
+                                  }}
+                                >
+                                  {recipe.excluded ? (
+                                    <>
+                                      <NoSymbolIcon className="h-4 w-4" />
+                                      Include in optimization
+                                    </>
+                                  ) : (
+                                    <>
+                                      <NoSymbolIcon className="h-4 w-4" />
+                                      Exclude from optimization
+                                    </>
+                                  )}
+                                </button>
+                                <button
+                                  type="button"
+                                  className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-muted"
+                                  role="menuitem"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleSetRecipeExcludedPin?.(recipe.id, { pinned: !recipe.pinned })
+                                    setOpenMenuId(null)
+                                  }}
+                                >
+                                  {recipe.pinned ? (
+                                    <>
+                                      <MapPinIcon className="h-4 w-4" />
+                                      Unpin from week
+                                    </>
+                                  ) : (
+                                    <>
+                                      <MapPinIcon className="h-4 w-4" />
+                                      Pin to week
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="flex flex-col gap-2 pt-4 border-t border-border">

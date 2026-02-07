@@ -8,8 +8,9 @@ import { useEffect, useState, useRef } from "react"
  *
  * @param {Object} props
  * @param {Object} props.remoteStorage - RemoteStorage instance
+ * @param {boolean} [props.embedded] - If true, container is inline (e.g. inside a Card); if false, fixed bottom-right
  */
-export default function RemoteStorageWidget({ remoteStorage }) {
+export default function RemoteStorageWidget({ remoteStorage, embedded = false }) {
   const [widget, setWidget] = useState(null)
   const initializedRef = useRef(false)
 
@@ -65,18 +66,23 @@ export default function RemoteStorageWidget({ remoteStorage }) {
         // Widget cleanup if needed
       }
     }
-  }, [remoteStorage])
+  }, [remoteStorage, widget])
 
-  // Always render the container
+  // Always render the container (inline when embedded, fixed when floating)
   return (
     <div
       id="remotestorage-widget-container"
-      style={{
-        position: "fixed",
-        bottom: "20px",
-        right: "20px",
-        zIndex: 1000
-      }}
+      className={embedded ? "min-h-[120px]" : ""}
+      style={
+        embedded
+          ? undefined
+          : {
+              position: "fixed",
+              bottom: "20px",
+              right: "20px",
+              zIndex: 1000,
+            }
+      }
     />
   )
 }

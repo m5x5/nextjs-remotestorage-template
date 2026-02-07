@@ -48,6 +48,7 @@ export function useRecipePage() {
     setSkipNextLoadAllData,
     remoteStorage,
     cleanupDuplicates,
+    saveSavedWeek,
   } = useRemoteStorageContext()
   const { theme, setTheme } = useTheme()
   const router = useRouter()
@@ -83,6 +84,8 @@ export function useRecipePage() {
   const csvLinksFileInputRef = useRef(null)
   const [showManageWeekModal, setShowManageWeekModal] = useState(false)
   const [manageWeekSelectedIds, setManageWeekSelectedIds] = useState([])
+  const [showSaveWeekModal, setShowSaveWeekModal] = useState(false)
+  const [saveWeekLabel, setSaveWeekLabel] = useState("")
   const [copiedIngredient, setCopiedIngredient] = useState(null)
   const [isOptimizing, setIsOptimizing] = useState(false)
   const [optimizeNumToSelect, setOptimizeNumToSelectState] = useState(7)
@@ -146,11 +149,10 @@ export function useRecipePage() {
     [saveSettings, optimizePerMealMinimums]
   )
 
-  const weekRecipeIds = settings.weekRecipeIds || []
-  const weekRecipes = useMemo(
-    () => recipes.filter((r) => r && r.id && weekRecipeIds.includes(r.id)),
-    [recipes, weekRecipeIds]
-  )
+  const weekRecipes = useMemo(() => {
+    const weekRecipeIds = settings.weekRecipeIds || []
+    return recipes.filter((r) => r && r.id && weekRecipeIds.includes(r.id))
+  }, [recipes, settings.weekRecipeIds])
 
   const weeklyTotalsByKey = useMemo(() => {
     // Compute totals for all nutrients that have goals set (custom or default)
@@ -623,6 +625,36 @@ export function useRecipePage() {
     if (loadRecipesList) await loadRecipesList()
     setManageWeekSelectedIds([...(settings.weekRecipeIds || [])])
     setShowManageWeekModal(true)
+  }
+
+  const openSaveWeekModal = () => {
+    setSaveWeekLabel("")
+    setShowSaveWeekModal(true)
+  }
+
+  const handleSaveWeekToHistory = async () => {
+    const recipeIds = settings.weekRecipeIds || []
+    if (recipeIds.length === 0) {
+      setMessage("No recipes in this week to save.")
+      setMessageType("warning")
+      setTimeout(() => setMessage(""), 3000)
+      return
+    }
+    if (!saveSavedWeek) return
+    try {
+      await saveSavedWeek({
+        label: saveWeekLabel.trim() || undefined,
+        recipeIds,
+      })
+      setShowSaveWeekModal(false)
+      setMessage("Week saved to history.")
+      setMessageType("success")
+      setTimeout(() => setMessage(""), 3000)
+    } catch (err) {
+      setMessage("Failed to save week: " + err.message)
+      setMessageType("error")
+      setTimeout(() => setMessage(""), 3000)
+    }
   }
 
   const runOptimization = async () => {
@@ -1236,6 +1268,12 @@ export function useRecipePage() {
     setManageWeekSelectedIds,
     openManageWeekModal,
     handleSetWeekRecipes,
+    showSaveWeekModal,
+    setShowSaveWeekModal,
+    saveWeekLabel,
+    setSaveWeekLabel,
+    openSaveWeekModal,
+    handleSaveWeekToHistory,
     // Optimize
     isOptimizing,
     optimizeNumToSelect,

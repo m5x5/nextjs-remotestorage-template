@@ -278,6 +278,22 @@ export const MyModule = {
       }
     })
 
+    privateClient.declareType('savedweek', {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        label: { type: 'string' },
+        savedAt: { type: 'string' },
+        recipeIds: {
+          type: 'array',
+          items: { type: 'string' }
+        }
+      },
+      required: ['id', 'savedAt', 'recipeIds']
+    })
+
+    const WEEKS_LIST_PATH = 'weeks/list.json'
+
     // ==================== EXPORTED METHODS ====================
 
     return {
@@ -639,6 +655,91 @@ export const MyModule = {
             }
             console.error("Error loading settings:", error)
             return defaultSettings
+          }
+        },
+
+        // ==================== SAVED WEEKS (HISTORY) ====================
+
+        /**
+         * Get list of all saved weeks (newest first).
+         * @returns {Promise<Array<{id: string, label?: string, savedAt: string, recipeIds: string[]}>>}
+         */
+        getSavedWeeksList: async function () {
+          try {
+            const file = await privateClient.getFile(WEEKS_LIST_PATH)
+            const data = file?.data ? (typeof file.data === 'string' ? JSON.parse(file.data) : file.data) : null
+            const list = Array.isArray(data) ? data : []
+            return [...list].sort((a, b) => {
+              const tA = a.savedAt ? new Date(a.savedAt).getTime() : 0
+              const tB = b.savedAt ? new Date(b.savedAt).getTime() : 0
+              return tB - tA
+            })
+          } catch (error) {
+            if (isNotFoundError(error)) return []
+            console.error("Error loading saved weeks list:", error)
+            return []
+          }
+        },
+
+        /**
+         * Save a week snapshot to history.
+         * @param {Object} week - { label?: string, recipeIds: string[] }
+         * @returns {Promise<{id: string, savedAt: string}>}
+         */
+        saveSavedWeek: async function (week) {
+          const id = `week-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+          const savedAt = new Date().toISOString()
+          const entry = {
+            id,
+            label: week.label || null,
+            savedAt,
+            recipeIds: Array.isArray(week.recipeIds) ? week.recipeIds : [],
+          }
+          let list = []
+          try {
+            const file = await privateClient.getFile(WEEKS_LIST_PATH)
+            const data = file?.data ? (typeof file.data === 'string' ? JSON.parse(file.data) : file.data) : null
+            list = Array.isArray(data) ? data : []
+          } catch (e) {
+            if (!isNotFoundError(e)) throw e
+          }
+          list.unshift(entry)
+          await privateClient.storeFile('application/json', WEEKS_LIST_PATH, JSON.stringify(list))
+          return { id, savedAt }
+        },
+
+        /**
+         * Load a saved week by id.
+         * @param {string} id
+         * @returns {Promise<{id: string, label?: string, savedAt: string, recipeIds: string[]}|null>}
+         */
+        loadSavedWeek: async function (id) {
+          try {
+            const file = await privateClient.getFile(WEEKS_LIST_PATH)
+            const data = file?.data ? (typeof file.data === 'string' ? JSON.parse(file.data) : file.data) : null
+            const list = Array.isArray(data) ? data : []
+            return list.find((w) => w && w.id === id) || null
+          } catch (error) {
+            if (isNotFoundError(error)) return null
+            throw error
+          }
+        },
+
+        /**
+         * Delete a saved week from history.
+         * @param {string} id
+         */
+        deleteSavedWeek: async function (id) {
+          try {
+            const file = await privateClient.getFile(WEEKS_LIST_PATH)
+            const data = file?.data ? (typeof file.data === 'string' ? JSON.parse(file.data) : file.data) : null
+            const list = Array.isArray(data) ? data : []
+            const filtered = list.filter((w) => w && w.id !== id)
+            if (filtered.length === list.length) return
+            await privateClient.storeFile('application/json', WEEKS_LIST_PATH, JSON.stringify(filtered))
+          } catch (error) {
+            if (isNotFoundError(error)) return
+            throw error
           }
         }
       }

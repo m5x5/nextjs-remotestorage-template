@@ -3,6 +3,7 @@ import "./globals.css"
 import { RemoteStorageProvider } from "@/contexts/RemoteStorageContext"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { Sidebar } from "@/components/Sidebar"
+import { PWARegistration } from "@/components/PWARegistration"
 
 export default function RootLayout({ children }) {
   return (
@@ -10,10 +11,16 @@ export default function RootLayout({ children }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#0f172a" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="RemoteStorage App" />
         <title>Next.js RemoteStorage App</title>
         <meta name="description" content="A Next.js app with RemoteStorage integration" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
       <body className="min-h-screen">
+        <PWARegistration />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <RemoteStorageProvider>
             <div className="flex min-h-screen">

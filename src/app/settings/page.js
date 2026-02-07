@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { useRecipePage } from "@/hooks/use-recipe-page"
 import MessageBanner from "@/components/home/MessageBanner"
 import SettingsTab from "@/components/home/SettingsTab"
@@ -31,13 +32,20 @@ export default function SettingsPage() {
     isCleaningUp,
     getAllIngredients,
     ingredientsRecipes,
+    recipesList,
+    handleSetRecipeExcludedPin,
     showImportModal,
     importJsonInput,
     setImportJsonInput,
     isImporting,
     handleImportRecipes,
     isConnected,
+    loadRecipesList,
   } = useRecipePage()
+
+  useEffect(() => {
+    if (isConnected && loadRecipesList) loadRecipesList()
+  }, [isConnected, loadRecipesList])
 
   return (
     <div className="py-8">
@@ -69,6 +77,8 @@ export default function SettingsPage() {
         isCleaningUp={isCleaningUp}
         getAllIngredients={getAllIngredients}
         ingredientsRecipes={ingredientsRecipes}
+        recipesList={recipesList}
+        handleSetRecipeExcludedPin={handleSetRecipeExcludedPin}
       />
       <ImportRecipesModal
         isOpen={showImportModal}

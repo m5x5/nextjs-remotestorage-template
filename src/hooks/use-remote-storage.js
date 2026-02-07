@@ -47,7 +47,7 @@ export function useRemoteStorage(options = {}) {
     }
 
     initializeRemoteStorage()
-  }, []) // Only run once on mount
+  }, [modules])
 
   // Claim access to modules after instance is ready
   useEffect(() => {

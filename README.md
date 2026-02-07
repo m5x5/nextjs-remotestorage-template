@@ -13,8 +13,18 @@ A clean, production-ready Next.js template for building apps with RemoteStorage.
 - ✅ Full dark mode support with theme persistence
 - ✅ Comprehensive UI component library
 - ✅ Responsive sidebar navigation
+- ✅ PWA support (installable, service worker, web app manifest)
 - ✅ TypeScript-ready structure
 - ✅ Clean, extensible architecture
+
+## PWA (Progressive Web App)
+
+The app is set up as a PWA so users can install it on their home screen and use it like an app.
+
+- **Install**: When the app is served over **HTTPS** (or localhost), browsers will offer “Install” or “Add to Home Screen”. On iOS Safari: Share → “Add to Home Screen”.
+- **Manifest**: `src/app/manifest.js` defines the app name, theme color, and display mode. The manifest is served at `/manifest.webmanifest`.
+- **Service worker**: `public/sw.js` is registered on load; it keeps the app installable. Replace or extend it if you want offline caching.
+- **Icons**: Placeholder icons are in `public/icon-192.png` and `public/icon-512.png`. Replace them with your own 192×192 and 512×512 PNGs for a proper install icon.
 
 ## Quick Start
 

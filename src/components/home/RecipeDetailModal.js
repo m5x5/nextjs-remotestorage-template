@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "@/components/ui/Modal"
 import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
@@ -80,10 +81,12 @@ export default function RecipeDetailModal({
         <div className="space-y-6">
           {selectedRecipe.image && (
             <div className="relative w-full h-64 bg-muted rounded-lg overflow-hidden">
-              <img
+              <Image
                 src={selectedRecipe.image}
                 alt={selectedRecipe.title}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                unoptimized
               />
             </div>
           )}

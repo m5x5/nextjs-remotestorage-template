@@ -26,6 +26,7 @@ export function useData(remoteStorage) {
     optimizePerMealMinimums: {},
     dailyRecommended: DEFAULT_DAILY_GOALS,
   })
+  const [savedWeeks, setSavedWeeks] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [isConnected, setIsConnected] = useState(false)
 
@@ -180,6 +181,42 @@ export function useData(remoteStorage) {
     }
   }, [remoteStorage, isConnected])
 
+  /** Load saved weeks list (history). */
+  const loadSavedWeeks = useCallback(async () => {
+    if (!remoteStorage?.mymodule || !isConnected) return
+    try {
+      const list = await remoteStorage.mymodule.getSavedWeeksList()
+      setSavedWeeks(list)
+    } catch (error) {
+      console.error("Error loading saved weeks:", error)
+    }
+  }, [remoteStorage, isConnected])
+
+  /** Save current week snapshot to history. */
+  const saveSavedWeek = useCallback(async (week) => {
+    if (!remoteStorage?.mymodule || !isConnected) {
+      throw new Error("RemoteStorage is not connected.")
+    }
+    const result = await remoteStorage.mymodule.saveSavedWeek(week)
+    await loadSavedWeeks()
+    return result
+  }, [remoteStorage, isConnected, loadSavedWeeks])
+
+  /** Load a single saved week by id. */
+  const loadSavedWeek = useCallback(async (id) => {
+    if (!remoteStorage?.mymodule || !isConnected) return null
+    return await remoteStorage.mymodule.loadSavedWeek(id)
+  }, [remoteStorage, isConnected])
+
+  /** Delete a saved week from history. */
+  const deleteSavedWeek = useCallback(async (id) => {
+    if (!remoteStorage?.mymodule || !isConnected) {
+      throw new Error("RemoteStorage is not connected.")
+    }
+    await remoteStorage.mymodule.deleteSavedWeek(id)
+    await loadSavedWeeks()
+  }, [remoteStorage, isConnected, loadSavedWeeks])
+
   // Initial load
   useEffect(() => {
     if (!remoteStorage?.mymodule || !isConnected) {
@@ -189,6 +226,12 @@ export function useData(remoteStorage) {
 
     loadAllData()
   }, [remoteStorage, isConnected, loadAllData])
+
+  // Load saved weeks when connected
+  useEffect(() => {
+    if (!remoteStorage?.mymodule || !isConnected) return
+    loadSavedWeeks()
+  }, [remoteStorage, isConnected, loadSavedWeeks])
 
   // Debounce ref for change handler
   const changeTimeoutRef = useRef(null)
@@ -221,6 +264,7 @@ export function useData(remoteStorage) {
         }
         console.log("[RS] changeHandler: running loadAllData in 200ms")
         loadAllData()
+        loadSavedWeeks().catch(() => {})
         changeTimeoutRef.current = null
       }, 200)
     }
@@ -238,7 +282,7 @@ export function useData(remoteStorage) {
         clearTimeout(changeTimeoutRef.current)
       }
     }
-  }, [remoteStorage, isConnected, loadAllData])
+  }, [remoteStorage, isConnected, loadAllData, loadSavedWeeks])
 
   // ==================== RECIPES METHODS ====================
 
@@ -397,6 +441,13 @@ export function useData(remoteStorage) {
     // State
     isLoading,
     isConnected,
+
+    // Saved weeks (history)
+    savedWeeks,
+    loadSavedWeeks,
+    saveSavedWeek,
+    loadSavedWeek,
+    deleteSavedWeek,
 
     // Recipes
     recipes,

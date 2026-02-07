@@ -12,7 +12,10 @@ export default function RecipeCharts({ recipes = [], settings = {} }) {
   const isDark = theme === 'dark'
   
   // Get daily recommended values from settings with fallback to defaults
-  const dailyRecommended = { ...DEFAULT_DAILY_GOALS, ...settings.dailyRecommended }
+  const dailyRecommended = useMemo(
+    () => ({ ...DEFAULT_DAILY_GOALS, ...settings.dailyRecommended }),
+    [settings.dailyRecommended]
+  )
   
   // Process recipe data for charts
   const chartData = useMemo(() => {

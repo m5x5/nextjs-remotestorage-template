@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, startTransition } from "react"
 import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "@/components/ui/Modal"
 import { Button } from "@/components/ui/Button"
 import { EllipsisVerticalIcon, NoSymbolIcon, CheckCircleIcon, MapPinIcon } from "@heroicons/react/24/outline"
@@ -19,7 +19,7 @@ export default function ManageWeekModal({
   const menuRef = useRef(null)
 
   useEffect(() => {
-    if (!isOpen) setOpenMenuId(null)
+    if (!isOpen) startTransition(() => setOpenMenuId(null))
   }, [isOpen])
 
   useEffect(() => {

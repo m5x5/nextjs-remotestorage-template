@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, startTransition } from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { cn } from "@/lib/utils"
 
@@ -28,8 +28,10 @@ export function Modal({ isOpen, onClose, children, className }) {
   // Reset drag state when modal opens/closes
   useEffect(() => {
     if (!isOpen) {
-      setDragY(0)
-      setIsDragging(false)
+      startTransition(() => {
+        setDragY(0)
+        setIsDragging(false)
+      })
     }
   }, [isOpen])
 

@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
 import { Input } from "@/components/ui/Input"
@@ -14,6 +13,9 @@ import {
   ChevronRightIcon,
   PlusIcon,
   XMarkIcon,
+  NoSymbolIcon,
+  CheckCircleIcon,
+  ArrowLeftIcon,
 } from "@heroicons/react/24/outline"
 import {
   DEFAULT_DAILY_GOALS,
@@ -47,26 +49,38 @@ export default function SettingsTab({
   isCleaningUp,
   getAllIngredients,
   ingredientsRecipes,
+  recipesList = [],
+  handleSetRecipeExcludedPin,
 }) {
+  const [expandedCategories, setExpandedCategories] = useState({})
+  const [showAddNutrient, setShowAddNutrient] = useState(false)
+  const [newFilterInput, setNewFilterInput] = useState("")
+  const [isMobile, setIsMobile] = useState(false)
+  const [mobileCategory, setMobileCategory] = useState(null)
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)")
+    const update = () => setIsMobile(mq.matches)
+    update()
+    mq.addEventListener("change", update)
+    return () => mq.removeEventListener("change", update)
+  }, [])
+
   if (!isConnected) {
     return (
-      <Card>
-        <CardContent className="py-8 text-center">
-          <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-          <p className="text-muted-foreground">
-            Please connect to RemoteStorage to access settings.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="py-8 text-center">
+        <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+        <p className="text-muted-foreground">
+          Please connect to RemoteStorage to access settings.
+        </p>
+      </div>
     )
   }
 
   const dailyRecommended = { ...DEFAULT_DAILY_GOALS, ...settings.dailyRecommended }
-  const [expandedCategories, setExpandedCategories] = useState({})
-  const [showAddNutrient, setShowAddNutrient] = useState(false)
-  const [newFilterInput, setNewFilterInput] = useState("")
   const allAvailableIngredients = getAllIngredients(true, ingredientsRecipes)
   const filteredIngredients = settings.filteredIngredients || []
+  const excludedRecipes = (recipesList || []).filter((r) => r && r.excluded)
 
   /** Case-sensitive: ingredient name is filtered if it contains any filter string. */
   const ingredientMatchesFilter = (ingredientName, filterList) =>
@@ -98,14 +112,67 @@ export default function SettingsTab({
     })
   }
 
+  const isMobileList = isMobile && mobileCategory == null
+  const isMobileDetail = isMobile && mobileCategory != null
+  const sectionClass = "pt-4 border-t border-border"
+  const sectionClassMaybe = isMobileDetail ? "" : sectionClass
+
+  const categoryList = [
+    { id: "general", title: "General", subtitle: "Theme, servings, delete confirmation" },
+    { id: "dailyRecommended", title: "Daily Recommended Nutritional Values", subtitle: "" },
+    { id: "excluded", title: "Excluded from optimization", subtitle: excludedRecipes.length > 0 ? `${excludedRecipes.length} recipe(s)` : "" },
+    { id: "filterIngredients", title: "Filter Ingredients", subtitle: filteredIngredients.length > 0 ? `${filteredIngredients.length} active` : "" },
+    { id: "dataManagement", title: "Data Management", subtitle: "Import, cleanup" },
+  ]
+
+  if (isMobileList) {
+    return (
+      <div className="rounded-lg border border-border overflow-hidden">
+        <ul className="divide-y divide-border">
+          {categoryList.map((cat) => (
+            <li key={cat.id}>
+              <button
+                type="button"
+                onClick={() => setMobileCategory(cat.id)}
+                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50 active:bg-muted transition-colors"
+              >
+                <span className="font-medium text-foreground">{cat.title}</span>
+                <span className="flex items-center gap-1 min-w-0">
+                  {cat.subtitle && (
+                    <span className="text-sm text-muted-foreground truncate">{cat.subtitle}</span>
+                  )}
+                  <ChevronRightIcon className="h-5 w-5 text-muted-foreground shrink-0" />
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  const renderBackHeader = (title) => (
+    <div className="flex items-center gap-2 mb-4">
+      <button
+        type="button"
+        onClick={() => setMobileCategory(null)}
+        className="flex items-center justify-center p-2 -ml-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+        aria-label="Back to settings"
+      >
+        <ArrowLeftIcon className="h-5 w-5" />
+      </button>
+      <h2 className="text-lg font-semibold">{title}</h2>
+    </div>
+  )
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Settings</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className={isMobileDetail ? "rounded-lg border border-border overflow-hidden" : ""}>
+      <div className={isMobileDetail ? "px-4 py-4" : ""}>
         <div className="space-y-6">
-          <div>
+          {(mobileCategory == null || mobileCategory === "general") && (
+            <div className={sectionClassMaybe}>
+              {isMobileDetail && renderBackHeader("General")}
+              <div>
             <label className="mb-3 block text-sm font-medium">Theme</label>
             <div className="grid grid-cols-3 gap-3">
               <button
@@ -238,8 +305,12 @@ export default function SettingsTab({
               </button>
             </div>
           </div>
+            </div>
+          )}
 
-          <div className="pt-4 border-t border-border">
+          {(mobileCategory == null || mobileCategory === "dailyRecommended") && (
+          <div className={sectionClassMaybe}>
+              {isMobileDetail && renderBackHeader("Daily Recommended Nutritional Values")}
             <h3 className="text-sm font-medium mb-3">
               Daily Recommended Nutritional Values
             </h3>
@@ -387,8 +458,61 @@ export default function SettingsTab({
               </div>
             )}
           </div>
+          )}
 
-          <div className="pt-4 border-t border-border">
+          {(mobileCategory == null || mobileCategory === "excluded") && (
+          <div className={sectionClassMaybe}>
+              {isMobileDetail && renderBackHeader("Excluded from optimization")}
+            <h3 className="text-sm font-medium mb-3">Excluded from optimization</h3>
+            <p className="text-xs text-muted-foreground mb-3">
+              Recipes marked as excluded are not suggested when you run &quot;Optimize week&quot;. You can include them again below.
+            </p>
+            {excludedRecipes.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                No recipes excluded. Use the ⋮ menu on a recipe (Home or Manage week) to exclude it from optimization.
+              </p>
+            ) : (
+              <ul className="space-y-2 max-h-48 overflow-y-auto border border-border rounded-lg p-3 bg-card">
+                {excludedRecipes.map((r) => (
+                  <li
+                    key={r.id}
+                    className="flex items-center justify-between gap-2 py-1.5 px-2 rounded-lg hover:bg-muted/50"
+                  >
+                    <span className="text-sm truncate flex-1 min-w-0 flex items-center gap-1.5" title={r.title}>
+                      <NoSymbolIcon className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+                      {r.title || r.id}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="shrink-0 text-xs"
+                      onClick={async () => {
+                        if (!handleSetRecipeExcludedPin) return
+                        try {
+                          await handleSetRecipeExcludedPin(r.id, { excluded: false })
+                          setMessage("Recipe included in optimization")
+                          setMessageType("success")
+                          setTimeout(() => setMessage(""), 2000)
+                        } catch (err) {
+                          setMessage("Error: " + err.message)
+                          setMessageType("error")
+                          setTimeout(() => setMessage(""), 3000)
+                        }
+                      }}
+                    >
+                      <CheckCircleIcon className="h-4 w-4 inline mr-1" />
+                      Include
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          )}
+
+          {(mobileCategory == null || mobileCategory === "filterIngredients") && (
+          <div className={sectionClassMaybe}>
+              {isMobileDetail && renderBackHeader("Filter Ingredients")}
             <h3 className="text-sm font-medium mb-3">Filter Ingredients</h3>
             <p className="text-xs text-muted-foreground mb-3">
               Hide ingredients from the ingredients page and exclude recipes
@@ -555,8 +679,11 @@ export default function SettingsTab({
               </>
             )}
           </div>
+          )}
 
-          <div className="pt-4 border-t border-border">
+          {(mobileCategory == null || mobileCategory === "dataManagement") && (
+          <div className={sectionClassMaybe}>
+              {isMobileDetail && renderBackHeader("Data Management")}
             <h3 className="text-sm font-medium mb-3">Data Management</h3>
             <div className="space-y-3">
               <div>
@@ -629,12 +756,15 @@ export default function SettingsTab({
               </div>
             </div>
           </div>
+          )}
         </div>
-        <p className="mt-4 text-xs text-muted-foreground">
-          Theme preference is saved to your RemoteStorage. Customize more
-          settings here!
-        </p>
-      </CardContent>
-    </Card>
+        {!isMobileDetail && (
+          <p className="mt-4 text-xs text-muted-foreground">
+            Theme preference is saved to your RemoteStorage. Customize more
+            settings here!
+          </p>
+        )}
+      </div>
+    </div>
   )
 }
