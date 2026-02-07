@@ -1,8 +1,8 @@
 "use client"
 
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/Card"
-import { Button } from "../ui/Button"
-import { Badge } from "../ui/Badge"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card"
+import { Button } from "@/components/ui/Button"
+import { Badge } from "@/components/ui/Badge"
 import { ExclamationTriangleIcon, ClipboardIcon, CheckIcon } from "@heroicons/react/24/outline"
 
 export default function IngredientsTab({

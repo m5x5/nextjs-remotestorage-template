@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent } from "../ui/Card"
+import { Card, CardContent } from "@/components/ui/Card"
 
 export default function MessageBanner({ message, messageType }) {
   if (!message) return null

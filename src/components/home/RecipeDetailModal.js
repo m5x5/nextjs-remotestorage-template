@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "../ui/Modal"
-import { Button } from "../ui/Button"
-import { Badge } from "../ui/Badge"
-import { Input } from "../ui/Input"
+import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "@/components/ui/Modal"
+import { Button } from "@/components/ui/Button"
+import { Badge } from "@/components/ui/Badge"
+import { Input } from "@/components/ui/Input"
 import {
   ArrowTopRightOnSquareIcon,
   CalculatorIcon,
@@ -13,8 +13,8 @@ import {
   MinusCircleIcon,
   NoSymbolIcon,
 } from "@heroicons/react/24/outline"
-import { getPerServingLabel, getEffectiveServings } from "../../lib/recipe-schema"
-import { getRecipeNutrientsForGoals, getIngredientContributionsForNutrient, getEffectiveAuditTrail } from "../../lib/weekly-goals"
+import { getPerServingLabel, getEffectiveServings } from "@/lib/recipe-schema"
+import { getRecipeNutrientsForGoals, getIngredientContributionsForNutrient, getEffectiveAuditTrail } from "@/lib/weekly-goals"
 
 export default function RecipeDetailModal({
   isOpen,

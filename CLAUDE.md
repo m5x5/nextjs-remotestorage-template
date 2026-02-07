@@ -4,10 +4,10 @@ This document is specifically written for AI coding assistants (like Claude) to 
 
 ## Project Overview
 
-**What this is**: A Next.js 14 template for building applications with RemoteStorage.js integration, featuring a modern UI design system with full dark mode support.
+**What this is**: A Next.js template for building applications with RemoteStorage.js integration, featuring a modern UI design system with full dark mode support.
 
 **Key technologies**:
-- Next.js 14 (App Router)
+- Next.js 16 (App Router, Turbopack by default)
 - RemoteStorage.js for decentralized storage
 - Tailwind CSS with semantic color tokens
 - next-themes for dark mode
@@ -32,13 +32,15 @@ User Action → Component → useRemoteStorageContext Hook
 
 ### File Organization
 
-**Core RemoteStorage Files**:
-- `lib/remotestorage-module.js` - Define data schema and storage methods
-- `hooks/use-remote-storage.js` - Initialize RemoteStorage client
-- `hooks/use-data.js` - React hooks for data operations
-- `contexts/RemoteStorageContext.js` - Context provider for app-wide access
+Application code lives under **`src/`** (Next.js `src` directory). The App Router uses `src/app/` for routes and layouts.
 
-**UI Components** (`components/ui/`):
+**Core RemoteStorage Files** (under `src/`):
+- `src/lib/remotestorage-module.js` - Define data schema and storage methods
+- `src/hooks/use-remote-storage.js` - Initialize RemoteStorage client
+- `src/hooks/use-data.js` - React hooks for data operations
+- `src/contexts/RemoteStorageContext.js` - Context provider for app-wide access
+
+**UI Components** (`src/components/ui/`):
 - `Button.js` - Buttons with 5 variants
 - `Card.js` - Cards with header/title/content
 - `Input.js` - Inputs and textareas
@@ -46,9 +48,9 @@ User Action → Component → useRemoteStorageContext Hook
 - `Modal.js` - Dialog modals
 
 **Layout**:
-- `app/layout.js` - Root layout with ThemeProvider and RemoteStorageProvider
-- `components/Sidebar.js` - Navigation sidebar (desktop vertical, mobile bottom)
-- `components/ThemeProvider.js` - Theme context wrapper
+- `src/app/layout.js` - Root layout with ThemeProvider and RemoteStorageProvider
+- `src/components/Sidebar.js` - Navigation sidebar (desktop vertical, mobile bottom)
+- `src/components/ThemeProvider.js` - Theme context wrapper
 
 ## Working with RemoteStorage
 
@@ -66,7 +68,7 @@ RemoteStorage uses a module pattern. The module in `lib/remotestorage-module.js`
 
 #### 1. Adding a New Data Type
 
-Edit `lib/remotestorage-module.js`:
+Edit `src/lib/remotestorage-module.js`:
 
 ```javascript
 // Declare the type
@@ -121,7 +123,7 @@ export default function MyComponent() {
 
 #### 3. Adding New Context Data
 
-Edit `hooks/use-data.js` to add new state/methods, then expose them in `contexts/RemoteStorageContext.js`:
+Edit `src/hooks/use-data.js` to add new state/methods, then expose them in `src/contexts/RemoteStorageContext.js`:
 
 ```javascript
 // In use-data.js
@@ -157,7 +159,7 @@ function MyComponent() {
 }
 ```
 
-**Theme persistence**: The theme is saved to RemoteStorage in the settings. See `app/page.js` line 40-53 for the implementation.
+**Theme persistence**: The theme is saved to RemoteStorage in the settings. See `src/app/page.js` for the implementation.
 
 ### Color System
 
@@ -281,13 +283,13 @@ if (!isConnected) {
 
 **Problem**: Saving triggers change events which trigger reloads.
 
-**Solution**: Use the `isSavingRef` pattern (see `hooks/use-data.js` line 13).
+**Solution**: Use the `isSavingRef` pattern (see `src/hooks/use-data.js`).
 
 ### 4. Theme Flash
 
 **Problem**: Theme flashes on page load.
 
-**Solution**: Already handled with `suppressHydrationWarning` in `app/layout.js`.
+**Solution**: Already handled with `suppressHydrationWarning` in `src/app/layout.js`.
 
 ### 5. Dark Mode Colors
 
@@ -323,12 +325,12 @@ npm run lint     # Run ESLint
 ## File Modification Guide
 
 ### To Change App Title/Branding
-- `app/layout.js` - Update `<title>` tag
-- `app/page.js` - Update main heading
+- `src/app/layout.js` - Update `<title>` tag
+- `src/app/page.js` - Update main heading
 
 ### To Add New Page
-1. Create `app/newpage/page.js`
-2. Add navigation link in `components/Sidebar.js`
+1. Create `src/app/newpage/page.js`
+2. Add navigation link in `src/components/Sidebar.js`
 3. Add route logic if needed
 
 ### To Modify Theme Colors
@@ -336,9 +338,9 @@ npm run lint     # Run ESLint
 - Changes apply globally via semantic tokens
 
 ### To Add New UI Component
-1. Create in `components/ui/NewComponent.js`
+1. Create in `src/components/ui/NewComponent.js`
 2. Follow existing patterns (use semantic colors, accept className prop)
-3. Export from `components/ui/index.js`
+3. Export from `src/components/ui/index.js`
 
 ## Important Notes for AI Agents
 
@@ -361,16 +363,16 @@ npm run lint     # Run ESLint
 
 | File | Purpose |
 |------|---------|
-| `app/layout.js` | Root layout with providers |
-| `app/page.js` | Main demo page |
-| `app/globals.css` | Global styles & theme variables |
-| `components/Sidebar.js` | Navigation sidebar |
-| `components/ui/*` | Reusable UI components |
-| `contexts/RemoteStorageContext.js` | RemoteStorage context |
-| `hooks/use-data.js` | Data CRUD operations |
-| `hooks/use-remote-storage.js` | RemoteStorage initialization |
-| `lib/remotestorage-module.js` | Data schema & storage methods |
-| `lib/utils.js` | Utility functions (cn helper) |
+| `src/app/layout.js` | Root layout with providers |
+| `src/app/page.js` | Main demo page |
+| `src/app/globals.css` | Global styles & theme variables |
+| `src/components/Sidebar.js` | Navigation sidebar |
+| `src/components/ui/*` | Reusable UI components |
+| `src/contexts/RemoteStorageContext.js` | RemoteStorage context |
+| `src/hooks/use-data.js` | Data CRUD operations |
+| `src/hooks/use-remote-storage.js` | RemoteStorage initialization |
+| `src/lib/remotestorage-module.js` | Data schema & storage methods |
+| `src/lib/utils.js` | Utility functions (cn helper) |
 | `tailwind.config.js` | Tailwind with semantic colors |
 
 ---

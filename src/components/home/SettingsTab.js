@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/Card"
-import { Button } from "../ui/Button"
-import { Badge } from "../ui/Badge"
-import { Input } from "../ui/Input"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card"
+import { Button } from "@/components/ui/Button"
+import { Badge } from "@/components/ui/Badge"
+import { Input } from "@/components/ui/Input"
 import {
   ExclamationTriangleIcon,
   SunIcon,
@@ -21,7 +21,7 @@ import {
   NUTRIENT_UNITS,
   getNutrientsByCategory,
   CORE_NUTRIENT_KEYS,
-} from "../../lib/nutrient-registry"
+} from "@/lib/nutrient-registry"
 
 export default function SettingsTab({
   isConnected,

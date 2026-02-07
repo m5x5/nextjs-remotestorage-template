@@ -26,25 +26,30 @@ export const MyModule = {
      */
     async function readRecipesListBuckets() {
       // 1) Read meta first. If we have buckets, use them and never request list.json (avoids 404 when list is in buckets).
+      console.log('[Optimize] readRecipesListBuckets: reading meta…')
       let metaFile = null
       try {
         metaFile = await privateClient.getFile(LIST_META_PATH)
+        console.log('[Optimize] readRecipesListBuckets: meta (list-meta) got')
       } catch (e) {
         if (isNotFoundError(e)) {
           try {
             metaFile = await privateClient.getFile('recipes/meta.json')
+            console.log('[Optimize] readRecipesListBuckets: meta (legacy meta) got')
           } catch (_) { /* ignore */ }
         } else {
+          console.error('[Optimize] readRecipesListBuckets: meta failed', e)
           throw e
         }
       }
 
       const meta = metaFile?.data ? (typeof metaFile.data === 'string' ? JSON.parse(metaFile.data) : metaFile.data) : null
       const bucketCount = meta?.bucketCount ?? 0
+      console.log('[Optimize] readRecipesListBuckets: bucketCount=', bucketCount)
 
       if (bucketCount > 0) {
         const list = []
-        const readBucket = async (path) => {
+        const readBucket = async (path, label) => {
           try {
             const file = await privateClient.getFile(path)
             if (file?.data) {
@@ -55,9 +60,11 @@ export const MyModule = {
           return []
         }
         for (let i = 0; i < bucketCount; i++) {
-          let chunk = await readBucket(listBucketPath(i))
+          console.log(`[Optimize] readRecipesListBuckets: reading bucket ${i}/${bucketCount}…`)
+          let chunk = await readBucket(listBucketPath(i), `bucket-${i}`)
+          console.log(`[Optimize] readRecipesListBuckets: bucket ${i} got ${chunk?.length ?? 0} entries`)
           if (chunk.length === 0 && i === 0) {
-            chunk = await readBucket(`recipes/buckets/${i}.json`)
+            chunk = await readBucket(`recipes/buckets/${i}.json`, `legacy-${i}`)
             if (chunk.length > 0) {
               list.push(...chunk)
               for (let j = 1; j < bucketCount; j++) {
@@ -85,8 +92,10 @@ export const MyModule = {
       }
 
       // 2) No buckets: try legacy list.json (migrate once). Only then do we request list.json, so 404 only when truly empty.
+      console.log('[Optimize] readRecipesListBuckets: no buckets, trying legacy list.json…')
       try {
         const file = await privateClient.getFile('recipes/list.json')
+        console.log('[Optimize] readRecipesListBuckets: list.json got')
         if (file?.data) {
           const parsed = typeof file.data === 'string' ? JSON.parse(file.data) : file.data
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -112,7 +121,9 @@ export const MyModule = {
         }
       } catch (e) {
         // 404 or any error: no legacy list
+        console.log('[Optimize] readRecipesListBuckets: no list.json or error', e?.message || e)
       }
+      console.log('[Optimize] readRecipesListBuckets: returning empty list')
       return []
     }
 
@@ -230,6 +241,10 @@ export const MyModule = {
         ingredient_audit_trail: { type: 'array' },
         /** Indices of ingredients to exclude from BLS nutrition (e.g. wrong mapping like "Salted Peanuts" → salt) */
         ingredient_nutrition_exclusions: { type: 'array' },
+        /** Excluded from week optimization (user does not want this recipe suggested) */
+        excluded: { type: 'boolean' },
+        /** Pinned to week: always included when running optimization; optimizer fills remaining slots */
+        pinned: { type: 'boolean' },
         created_at: { type: 'string' },
         updated_at: { type: 'string' }
       },
@@ -315,7 +330,13 @@ export const MyModule = {
               }
             }
           })
-          recipesMap.set(recipe.id, { id: recipe.id, title: recipe.title, updated_at: timestamp })
+          recipesMap.set(recipe.id, {
+            id: recipe.id,
+            title: recipe.title,
+            updated_at: timestamp,
+            excluded: !!recipe.excluded,
+            pinned: !!recipe.pinned
+          })
 
           const uniqueList = Array.from(recipesMap.values())
           uniqueList.sort((a, b) => {
@@ -377,7 +398,13 @@ export const MyModule = {
             const existing = recipesMap.get(e.id)
             const updated_at = e.updated_at || existing?.updated_at
             if (!existing || (updated_at && existing.updated_at && new Date(updated_at) > new Date(existing.updated_at))) {
-              recipesMap.set(e.id, { id: e.id, title: e.title || existing?.title || '', updated_at: updated_at || new Date().toISOString() })
+              recipesMap.set(e.id, {
+                id: e.id,
+                title: e.title || existing?.title || '',
+                updated_at: updated_at || new Date().toISOString(),
+                excluded: e.excluded ?? existing?.excluded ?? false,
+                pinned: e.pinned ?? existing?.pinned ?? false
+              })
             }
           })
 
@@ -449,8 +476,10 @@ export const MyModule = {
          * @returns {Promise<Array>}
          */
         getRecipesList: async function () {
+          console.log('[Optimize] getRecipesList: called')
           try {
             const parsed = await readRecipesListBuckets()
+            console.log('[Optimize] getRecipesList: readRecipesListBuckets returned', parsed?.length ?? 0, 'entries')
             if (!Array.isArray(parsed) || parsed.length === 0) return parsed?.length === 0 ? [] : []
 
             const uniqueMap = new Map()

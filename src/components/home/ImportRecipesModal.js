@@ -1,7 +1,7 @@
 "use client"
 
-import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "../ui/Modal"
-import { Button } from "../ui/Button"
+import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "@/components/ui/Modal"
+import { Button } from "@/components/ui/Button"
 
 export default function ImportRecipesModal({
   isOpen,

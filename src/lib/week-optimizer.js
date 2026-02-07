@@ -28,19 +28,29 @@ function recipeScore(recipe, weeklyGoals) {
 
 /**
  * Select optimal recipes for the week using mixed-integer linear programming.
- * Recipes that exceed any per-meal limit or fall below any per-meal minimum are excluded before solving.
- * @param {Array<{ id: string, nutrients: Array }>} recipes - All recipes
+ * - Recipes with excluded: true are not considered.
+ * - Recipes with pinned: true are always included; the optimizer fills the remaining slots.
+ * - Recipes that exceed any per-meal limit or fall below any per-meal minimum are excluded before solving.
+ * @param {Array<{ id: string, nutrients: Array, excluded?: boolean, pinned?: boolean }>} recipes - All recipes (excluded ones are filtered out by caller or here)
  * @param {number} numToSelect - Number of recipes to select (e.g. 7)
  * @param {Object} weeklyGoals - Optional override of weekly goals
  * @param {Record<string, number>} [perMealLimits] - Optional max per meal, e.g. { calories: 800, fat: 50 }
  * @param {Record<string, number>} [perMealMinimums] - Optional min per meal, e.g. { calories: 500 }
- * @returns {{ selectedIds: string[], feasible: boolean, result?: number, excludedByLimits?: number, excludedByMinimums?: number }}
+ * @returns {{ selectedIds: string[], feasible: boolean, result?: number, excludedByLimits?: number, excludedByMinimums?: number, pinnedCount?: number }}
  */
 export function optimizeWeekRecipes(recipes, numToSelect = 7, weeklyGoals = null, perMealLimits = null, perMealMinimums = null) {
   const goals = weeklyGoals || WEEKLY_GOALS
   const hasLimits = perMealLimits && typeof perMealLimits === 'object' && Object.keys(perMealLimits).length > 0
   const hasMinimums = perMealMinimums && typeof perMealMinimums === 'object' && Object.keys(perMealMinimums).length > 0
-  let candidateRecipes = recipes
+
+  // Exclude recipes marked as excluded from optimization
+  let candidateRecipes = (recipes || []).filter((r) => !r.excluded)
+
+  // Split into pinned (fixed) and rest (optimizer chooses from these)
+  const pinnedRecipes = candidateRecipes.filter((r) => r.pinned)
+  const pinnedIds = pinnedRecipes.map((r) => r.id)
+  candidateRecipes = candidateRecipes.filter((r) => !r.pinned)
+
   let excludedByLimits = 0
   let excludedByMinimums = 0
   if (hasLimits) {
@@ -54,15 +64,25 @@ export function optimizeWeekRecipes(recipes, numToSelect = 7, weeklyGoals = null
     excludedByMinimums = before - candidateRecipes.length
   }
 
-  if (!candidateRecipes.length || numToSelect <= 0) {
-    return { selectedIds: [], feasible: false, excludedByLimits, excludedByMinimums }
+  const numSlotsToOptimize = Math.max(0, numToSelect - pinnedIds.length)
+
+  if (numToSelect <= 0) {
+    return { selectedIds: [], feasible: false, excludedByLimits, excludedByMinimums, pinnedCount: pinnedIds.length }
   }
-  if (candidateRecipes.length <= numToSelect) {
-    return { selectedIds: candidateRecipes.map((r) => r.id), feasible: true, excludedByLimits, excludedByMinimums }
+  if (numSlotsToOptimize === 0) {
+    return { selectedIds: pinnedIds.slice(0, numToSelect), feasible: true, excludedByLimits, excludedByMinimums, pinnedCount: pinnedIds.length }
+  }
+  if (!candidateRecipes.length) {
+    return { selectedIds: pinnedIds.slice(0, numToSelect), feasible: pinnedIds.length >= numToSelect, excludedByLimits, excludedByMinimums, pinnedCount: pinnedIds.length }
+  }
+  if (candidateRecipes.length <= numSlotsToOptimize) {
+    const optimizedIds = candidateRecipes.map((r) => r.id)
+    const selectedIds = [...pinnedIds, ...optimizedIds].slice(0, numToSelect)
+    return { selectedIds, feasible: true, excludedByLimits, excludedByMinimums, pinnedCount: pinnedIds.length }
   }
 
   const variables = {}
-  const constraints = { count: { equal: numToSelect } }
+  const constraints = { count: { equal: numSlotsToOptimize } }
   const ints = {}
 
   candidateRecipes.forEach((recipe, i) => {
@@ -84,13 +104,14 @@ export function optimizeWeekRecipes(recipes, numToSelect = 7, weeklyGoals = null
 
   const result = solver.Solve(model)
   if (!result.feasible) {
-    return { selectedIds: [], feasible: false, excludedByLimits, excludedByMinimums }
+    return { selectedIds: [], feasible: false, excludedByLimits, excludedByMinimums, pinnedCount: pinnedIds.length }
   }
 
-  const selectedIds = []
+  const optimizedIds = []
   candidateRecipes.forEach((r, i) => {
-    if (result[`x${i}`] === 1) selectedIds.push(r.id)
+    if (result[`x${i}`] === 1) optimizedIds.push(r.id)
   })
+  const selectedIds = [...pinnedIds, ...optimizedIds].slice(0, numToSelect)
 
-  return { selectedIds, feasible: true, result: result.result, excludedByLimits, excludedByMinimums }
+  return { selectedIds, feasible: true, result: result.result, excludedByLimits, excludedByMinimums, pinnedCount: pinnedIds.length }
 }

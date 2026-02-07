@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import { DEFAULT_DAILY_GOALS } from "../lib/nutrient-registry"
+import { DEFAULT_DAILY_GOALS } from "@/lib/nutrient-registry"
 
 /**
  * Hook to sync data with RemoteStorage
@@ -137,9 +137,28 @@ export function useData(remoteStorage) {
 
   /** Load all recipes (list + full bodies). For optimizer or Ingredients tab. Returns the array. */
   const loadAllRecipesForOptimizer = useCallback(async () => {
-    if (!remoteStorage?.mymodule || !isConnected) return []
+    console.log("[Optimize] loadAllRecipesForOptimizer: entered")
+    if (!remoteStorage?.mymodule || !isConnected) {
+      console.log("[Optimize] loadAllRecipesForOptimizer: not connected or no module, returning []")
+      return []
+    }
     try {
-      const list = await remoteStorage.mymodule.getRecipesList()
+      console.log("[Optimize] loadAllRecipesForOptimizer: calling getRecipesList()…")
+      const tList = Date.now()
+      const LIST_TIMEOUT_MS = 60000
+      let list
+      try {
+        list = await Promise.race([
+          remoteStorage.mymodule.getRecipesList(),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error(`getRecipesList() timed out after ${LIST_TIMEOUT_MS / 1000}s. Check RemoteStorage connection.`)), LIST_TIMEOUT_MS)
+        )
+        ])
+      } catch (getListErr) {
+        console.error("[Optimize] getRecipesList() threw:", getListErr)
+        throw getListErr
+      }
+      console.log(`[Optimize] loadAllRecipesForOptimizer: getRecipesList() returned ${list?.length ?? 0} entries in ${Date.now() - tList}ms`)
       const uniqueMap = new Map()
       list.forEach((r) => {
         if (r && r.id) {
@@ -150,10 +169,13 @@ export function useData(remoteStorage) {
         }
       })
       const ids = Array.from(uniqueMap.values()).map((r) => r.id)
+      console.log(`[Optimize] loadAllRecipesForOptimizer: loading ${ids.length} recipe bodies in parallel…`)
+      const tLoad = Date.now()
       const loaded = await Promise.all(ids.map((id) => remoteStorage.mymodule.loadRecipe(id)))
+      console.log(`[Optimize] loadAllRecipesForOptimizer: loaded ${loaded.filter(Boolean).length} recipes in ${Date.now() - tLoad}ms`)
       return loaded.filter(Boolean)
     } catch (error) {
-      console.error("Error loading all recipes:", error)
+      console.error("[Optimize] Error loading all recipes:", error)
       return []
     }
   }, [remoteStorage, isConnected])

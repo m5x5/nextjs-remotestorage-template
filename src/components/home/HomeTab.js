@@ -1,23 +1,25 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/Card"
-import { Button } from "../ui/Button"
-import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "../ui/Modal"
-import { TrashIcon, ArrowTopRightOnSquareIcon, ChartBarIcon } from "@heroicons/react/24/outline"
-import RecipeCharts from "../RecipeCharts"
+import { useState, useMemo, useRef, useEffect } from "react"
+import Link from "next/link"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card"
+import { Button } from "@/components/ui/Button"
+import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "@/components/ui/Modal"
+import { TrashIcon, ArrowTopRightOnSquareIcon, ChartBarIcon, EllipsisVerticalIcon, NoSymbolIcon, MapPinIcon } from "@heroicons/react/24/outline"
+import { MapPinIcon as MapPinIconSolid } from "@heroicons/react/24/solid"
+import RecipeCharts from "@/components/RecipeCharts"
 import {
   NUTRIENT_LABELS,
   NUTRIENT_UNITS,
   CORE_NUTRIENT_KEYS,
   DEFAULT_WEEKLY_GOALS,
-} from "../../lib/nutrient-registry"
+} from "@/lib/nutrient-registry"
 import {
   getRecipeNutrientsForGoals,
   getRecipeValueForGoal,
   getIngredientContributionsForNutrient,
   getAppNutrientTypeForGoalKey,
-} from "../../lib/weekly-goals"
+} from "@/lib/weekly-goals"
 
 export default function HomeTab({
   isConnected,
@@ -26,16 +28,27 @@ export default function HomeTab({
   weekRecipes,
   weeklyTotalsByKey,
   settings,
-  setActiveTab,
   getMainNutrients,
   getAllNutrientPercentages,
   formatNutrientType,
   getEffectiveServings: getServings,
   handleLoadRecipe,
   handleDelete,
+  handleSetRecipeExcludedPin,
   openManageWeekModal,
 }) {
   const [goalKeyForBreakdown, setGoalKeyForBreakdown] = useState(null)
+  const [openMenuId, setOpenMenuId] = useState(null)
+  const menuRef = useRef(null)
+
+  useEffect(() => {
+    if (openMenuId == null) return
+    const onDocClick = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setOpenMenuId(null)
+    }
+    document.addEventListener("click", onDocClick, true)
+    return () => document.removeEventListener("click", onDocClick, true)
+  }, [openMenuId])
 
   const breakdownData = useMemo(() => {
     if (!goalKeyForBreakdown || !weekRecipes?.length) return null
@@ -95,14 +108,13 @@ export default function HomeTab({
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h2 className="text-xl font-semibold">This week</h2>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setActiveTab("optimize")}
-            className="flex items-center gap-2"
+          <Link
+            href="/optimize"
+            className="inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-opacity border-2 border-dashed border-border bg-muted/50 text-muted-foreground hover:bg-muted hover:border-muted-foreground/50 px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
           >
+            <ChartBarIcon className="h-4 w-4" />
             Optimize week
-          </Button>
+          </Link>
           <Button
             variant="outline"
             size="sm"
@@ -358,10 +370,84 @@ export default function HomeTab({
                     </div>
                   </div>
                   <div className="flex-1 min-w-0 pr-4">
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-semibold text-lg line-clamp-2 flex-1 leading-tight">
+                    <div className="flex items-start justify-between gap-2 mb-3">
+                      <h3 className="font-semibold text-lg line-clamp-2 flex-1 leading-tight min-w-0">
                         {recipe.title}
                       </h3>
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        {(recipe.excluded || recipe.pinned) && (
+                          <span className="flex items-center gap-0.5 text-muted-foreground" title={recipe.excluded ? "Excluded from optimization" : ""}>
+                            {recipe.excluded && <NoSymbolIcon className="h-4 w-4" />}
+                            {recipe.pinned && <MapPinIconSolid className="h-4 w-4 text-primary" title="Pinned to week" />}
+                          </span>
+                        )}
+                        <div className="relative" ref={openMenuId === recipe.id ? menuRef : null}>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setOpenMenuId((id) => (id === recipe.id ? null : recipe.id))
+                            }}
+                            className="rounded p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                            aria-label="Recipe options"
+                            aria-expanded={openMenuId === recipe.id}
+                          >
+                            <EllipsisVerticalIcon className="h-5 w-5" />
+                          </button>
+                          {openMenuId === recipe.id && (
+                            <div
+                              className="absolute right-0 top-full mt-1 z-20 min-w-[200px] rounded-lg border border-border bg-card py-1 shadow-lg"
+                              role="menu"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <button
+                                type="button"
+                                className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-muted"
+                                role="menuitem"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleSetRecipeExcludedPin?.(recipe.id, { excluded: !recipe.excluded })
+                                  setOpenMenuId(null)
+                                }}
+                              >
+                                {recipe.excluded ? (
+                                  <>
+                                    <NoSymbolIcon className="h-4 w-4" />
+                                    Include in optimization
+                                  </>
+                                ) : (
+                                  <>
+                                    <NoSymbolIcon className="h-4 w-4" />
+                                    Exclude from optimization
+                                  </>
+                                )}
+                              </button>
+                              <button
+                                type="button"
+                                className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-muted"
+                                role="menuitem"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleSetRecipeExcludedPin?.(recipe.id, { pinned: !recipe.pinned })
+                                  setOpenMenuId(null)
+                                }}
+                              >
+                                {recipe.pinned ? (
+                                  <>
+                                    <MapPinIcon className="h-4 w-4" />
+                                    Unpin from week
+                                  </>
+                                ) : (
+                                  <>
+                                    <MapPinIcon className="h-4 w-4" />
+                                    Pin to week
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
                     <div className="flex flex-col gap-2 pt-4 border-t border-border">
                       {recipe.cookidooUrl ? (

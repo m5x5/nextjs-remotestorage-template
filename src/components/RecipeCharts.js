@@ -4,8 +4,8 @@ import { useMemo } from "react"
 import { useTheme } from "next-themes"
 import ReactECharts from "echarts-for-react"
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/Card"
-import { getDailyPercentage } from "../lib/recipe-display-utils"
-import { DEFAULT_DAILY_GOALS } from "../lib/nutrient-registry"
+import { getDailyPercentage } from "@/lib/recipe-display-utils"
+import { DEFAULT_DAILY_GOALS } from "@/lib/nutrient-registry"
 
 export default function RecipeCharts({ recipes = [], settings = {} }) {
   const { theme } = useTheme()

@@ -1,14 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/Card"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
 import {
   NUTRIENT_LABELS,
   NUTRIENT_UNITS,
   getNutrientsByCategory,
-} from "../../lib/nutrient-registry"
+} from "@/lib/nutrient-registry"
 
 export default function OptimizeTab({
   isConnected,
@@ -78,7 +78,9 @@ export default function OptimizeTab({
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
           Load all recipes and run the optimizer to pick recipes that best meet
-          your weekly nutrient goals. Data is loaded only when you press Run.
+          your weekly nutrient goals. Excluded recipes are skipped; pinned
+          recipes are fixed and the optimizer fills the remaining slots. Data
+          is loaded only when you press Run.
         </p>
         <Input
           label="Number of recipes to select"

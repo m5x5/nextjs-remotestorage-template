@@ -2,24 +2,24 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import { useTheme } from "next-themes"
-import { useRemoteStorageContext } from "../contexts/RemoteStorageContext"
-import { useNavigation } from "../contexts/NavigationContext"
-import { isSchemaOrgRecipe, schemaToRecipe } from "../lib/recipe-schema"
-import { parseCSV } from "../lib/csv-parse"
+import { useRouter } from "next/navigation"
+import { useRemoteStorageContext } from "@/contexts/RemoteStorageContext"
+import { isSchemaOrgRecipe, schemaToRecipe } from "@/lib/recipe-schema"
+import { parseCSV } from "@/lib/csv-parse"
 import {
   WEEKLY_GOAL_KEYS,
   getRecipeValueForGoal,
   buildNutrientsFromBlsRow,
-} from "../lib/weekly-goals"
+} from "@/lib/weekly-goals"
 import {
   NUTRIENT_LABELS,
   NUTRIENT_UNITS,
   CORE_NUTRIENT_KEYS,
   ALL_NUTRIENT_KEYS,
   DEFAULT_WEEKLY_GOALS,
-} from "../lib/nutrient-registry"
-import { optimizeWeekRecipes } from "../lib/week-optimizer"
-import { INITIAL_RECIPES } from "../lib/initial-recipes"
+} from "@/lib/nutrient-registry"
+import { optimizeWeekRecipes } from "@/lib/week-optimizer"
+import { INITIAL_RECIPES } from "@/lib/initial-recipes"
 import {
   formatNutrientType,
   formatIngredientQuantity,
@@ -27,7 +27,7 @@ import {
   getMainNutrients,
   getDailyPercentage as getDailyPercentageUtil,
   getAllNutrientPercentages as getAllNutrientPercentagesUtil,
-} from "../lib/recipe-display-utils"
+} from "@/lib/recipe-display-utils"
 
 export function useRecipePage() {
   const {
@@ -50,7 +50,7 @@ export function useRecipePage() {
     cleanupDuplicates,
   } = useRemoteStorageContext()
   const { theme, setTheme } = useTheme()
-  const { activeTab, setActiveTab } = useNavigation()
+  const router = useRouter()
 
   const [selectedRecipe, setSelectedRecipe] = useState(null)
   const [editingCookidooUrl, setEditingCookidooUrl] = useState(false)
@@ -243,21 +243,17 @@ export function useRecipePage() {
     initializeRecipes()
   }, [isConnected, isLoading, remoteStorage, saveRecipe])
 
-  useEffect(() => {
-    if (activeTab !== "ingredients" || !isConnected || !loadAllRecipesForOptimizer) return
-    let cancelled = false
+  const loadIngredientsRecipes = useCallback(() => {
+    if (!isConnected || !loadAllRecipesForOptimizer) return
     setIngredientsRecipesLoading(true)
     loadAllRecipesForOptimizer()
       .then((list) => {
-        if (!cancelled && list) setIngredientsRecipes(list)
+        if (list) setIngredientsRecipes(list)
       })
       .finally(() => {
-        if (!cancelled) setIngredientsRecipesLoading(false)
+        setIngredientsRecipesLoading(false)
       })
-    return () => {
-      cancelled = true
-    }
-  }, [activeTab, isConnected, loadAllRecipesForOptimizer])
+  }, [isConnected, loadAllRecipesForOptimizer])
 
   const handleThemeChange = async (newTheme) => {
     setTheme(newTheme)
@@ -630,11 +626,22 @@ export function useRecipePage() {
   }
 
   const runOptimization = async () => {
-    if (!loadAllRecipesForOptimizer || !loadRecipesByIds || !saveSettings) return
+    console.log("[Optimize] runOptimization: clicked, starting…")
+    if (!loadAllRecipesForOptimizer || !loadRecipesByIds || !saveSettings) {
+      console.warn("[Optimize] runOptimization: missing deps, aborting", {
+        loadAllRecipesForOptimizer: !!loadAllRecipesForOptimizer,
+        loadRecipesByIds: !!loadRecipesByIds,
+        saveSettings: !!saveSettings,
+      })
+      return
+    }
     const numToSelect = Math.max(1, Math.min(100, parseInt(optimizeNumToSelect, 10) || 7))
     setIsOptimizing(true)
     try {
+      console.log("[Optimize] Loading all recipes from storage…")
+      const tLoadStart = Date.now()
       const allRecipes = await loadAllRecipesForOptimizer()
+      console.log(`[Optimize] Loaded ${allRecipes?.length ?? 0} recipes in ${Date.now() - tLoadStart}ms`)
       if (!allRecipes || allRecipes.length === 0) {
         setMessage("No recipes in storage. Import recipes in Settings first.")
         setMessageType("info")
@@ -657,6 +664,7 @@ export function useRecipePage() {
           })
         })
       }
+      console.log(`[Optimize] After filters: ${recipesForOptimizer.length} candidates (minMatchRate=${minMatchRate}, numToSelect=${numToSelect})`)
       if (recipesForOptimizer.length < numToSelect) {
         setMessage(
           `Only ${recipesForOptimizer.length} recipe(s) have BLS match rate ≥ ${minMatchRate}%. Need at least ${numToSelect}. Lower the minimum match rate or add more recipes.`
@@ -683,13 +691,16 @@ export function useRecipePage() {
           .filter(([, v]) => v != null && Number(v) > 0)
           .map(([k, v]) => [k, Number(v) * householdSize])
       )
-      const { selectedIds, feasible, excludedByLimits, excludedByMinimums } = optimizeWeekRecipes(
+      console.log("[Optimize] Running LP optimizer…")
+      const tOptStart = Date.now()
+      const { selectedIds, feasible, excludedByLimits, excludedByMinimums, pinnedCount } = optimizeWeekRecipes(
         recipesForOptimizer,
         numToSelect,
         Object.keys(weeklyGoalsForOptimizer).length > 0 ? weeklyGoalsForOptimizer : undefined,
         Object.keys(perMealLimits).length ? perMealLimits : undefined,
         Object.keys(perMealMinimums).length ? perMealMinimums : undefined
       )
+      console.log(`[Optimize] Optimizer finished in ${Date.now() - tOptStart}ms: feasible=${feasible}, selected=${selectedIds?.length ?? 0}, pinned=${pinnedCount ?? 0}`)
       if (!feasible || selectedIds.length === 0) {
         const limitHint =
           excludedByLimits > 0
@@ -707,24 +718,32 @@ export function useRecipePage() {
         return
       }
       setSkipNextLoadAllData?.()
+      console.log("[Optimize] Saving week and loading recipe details…")
+      const tSaveStart = Date.now()
       await saveSettings({ ...settings, weekRecipeIds: selectedIds })
       await loadRecipesByIds(selectedIds)
+      console.log(`[Optimize] Save + load done in ${Date.now() - tSaveStart}ms`)
       const limitNote =
         excludedByLimits > 0 ? ` (${excludedByLimits} excluded by per-meal limits)` : ''
       const minNote =
         excludedByMinimums > 0 ? ` (${excludedByMinimums} excluded by per-meal minimums)` : ''
+      const pinnedNote =
+        pinnedCount > 0 ? ` ${pinnedCount} pinned, ${selectedIds.length - pinnedCount} chosen by optimizer.` : ''
       setMessage(
-        `Week optimized: ${selectedIds.length} recipes selected for best nutrient coverage.${limitNote}${minNote}`
+        `Week optimized: ${selectedIds.length} recipes selected for best nutrient coverage.${pinnedNote}${limitNote}${minNote}`
       )
       setMessageType("success")
       setTimeout(() => setMessage(""), 4000)
-      setActiveTab("home")
+      router.push("/")
+      console.log("[Optimize] runOptimization: done")
     } catch (err) {
+      console.error("[Optimize] runOptimization failed:", err)
       setMessage("Optimization failed: " + err.message)
       setMessageType("error")
       setTimeout(() => setMessage(""), 4000)
     } finally {
       setIsOptimizing(false)
+      console.log("[Optimize] runOptimization: finished (success or early return)")
     }
   }
 
@@ -965,6 +984,39 @@ export function useRecipePage() {
     }
   }
 
+  /** Toggle exclude/pin for a recipe. Updates recipe and refreshes list. */
+  const handleSetRecipeExcludedPin = async (recipeId, updates) => {
+    if (!recipeId || !saveRecipe || !loadRecipe) return
+    const { excluded, pinned } = updates || {}
+    if (excluded === undefined && pinned === undefined) return
+    try {
+      const recipe = await loadRecipe(recipeId)
+      if (!recipe) return
+      const updated = {
+        ...recipe,
+        ...(excluded !== undefined && { excluded: !!excluded }),
+        ...(pinned !== undefined && { pinned: !!pinned }),
+      }
+      await saveRecipe(updated)
+      updateRecipeInList?.(updated)
+      if (loadRecipesList) await loadRecipesList()
+      if (selectedRecipe?.id === recipeId) setSelectedRecipe(updated)
+      const msg =
+        excluded !== undefined && pinned !== undefined
+          ? "Recipe updated."
+          : excluded !== undefined
+            ? (excluded ? "Recipe excluded from optimization." : "Recipe included in optimization.")
+            : (pinned ? "Recipe pinned to week." : "Recipe unpinned.")
+      setMessage(msg)
+      setMessageType("success")
+      setTimeout(() => setMessage(""), 2000)
+    } catch (err) {
+      setMessage("Failed to update recipe: " + err.message)
+      setMessageType("error")
+      setTimeout(() => setMessage(""), 3000)
+    }
+  }
+
   const getAllIngredients = (includeFiltered = false, recipeList = null) => {
     const list = recipeList != null ? recipeList : recipes
     const ingredientsMap = new Map()
@@ -1123,9 +1175,6 @@ export function useRecipePage() {
     weekRecipes,
     weeklyTotalsByKey,
     settings,
-    // Tab state
-    activeTab,
-    setActiveTab,
     // Message
     message,
     messageType,
@@ -1138,6 +1187,7 @@ export function useRecipePage() {
     closeRecipeModal,
     handleLoadRecipe,
     handleDelete,
+    handleSetRecipeExcludedPin,
     // Recipe edit state (modal)
     editingCookidooUrl,
     setEditingCookidooUrl,
@@ -1200,6 +1250,7 @@ export function useRecipePage() {
     // Ingredients tab
     ingredientsRecipes,
     ingredientsRecipesLoading,
+    loadIngredientsRecipes,
     getAllIngredients,
     copiedIngredient,
     copyIngredient,
